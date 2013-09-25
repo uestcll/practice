@@ -195,6 +195,9 @@ bool dispatchCMD(char * command,Tools * tool)
 		case QUIT:
 			destoryPhoneNum(tool);
 			return false;
+		case FIND:
+			doFind(command,tool);
+			return true;
 		default:
 			return true;
 		}	
@@ -208,6 +211,7 @@ int  commandAnalysis(char * command)
 	if(memcmp(command,"-ad",3)==0)		return ADDNEW;
 	if(memcmp(command,"-qt",3)==0) 		return QUIT;
 	if(memcmp(command,"-ls",3)==0)		return SHOW;
+	if(memcmp(command,"-fd",3)==0)		return FIND;
 	Usage();
 	return -1;
 }
@@ -254,4 +258,26 @@ char * find(char * in,char aim,bool statu)
 		}
 		return in;	
 	}
+}
+
+void doFind(char * command,Tools * tool)
+{
+	int len = PHONE_NAME_LENGTH>PHONE_NUM_LENGTH?PHONE_NAME_LENGTH:PHONE_NUM_LENGTH;
+	char * searchBuf = (char *)calloc(len,sizeof(char));
+	getStr(&command[3],searchBuf,len);
+
+	phoneNum * p_num = tool->head->NextP;
+
+	while(p_num!=NULL)
+	{
+		char TMP[23] = {0};
+		if((!strcmp(p_num->name,searchBuf))||(!strcmp(p_num->num,searchBuf)))
+		{
+			printf("%s\n",PN2str(p_num,TMP));	
+		}
+
+		p_num = p_num->NextP;
+	}
+
+	free(searchBuf);
 }

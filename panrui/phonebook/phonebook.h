@@ -17,6 +17,8 @@
 #define ADDNEW	3
 #define QUIT 	4
 #define SHOW    5
+//addition
+#define FIND	6
 
 struct phoneNum
 {
@@ -45,11 +47,11 @@ char * PN2str(phoneNum * p_num,char * output);
 void mainLoop(Tools * tool);
 int  commandAnalysis(char * command);
 bool dispatchCMD(char * command,Tools * tool);
-//void getPath(char * command,char *path);
-//bool getInfo(char * command,char *name,char *num);
 char * find(char * in,char aim,bool statu);
 void Usage();
 char * getStr(char * sentence,char * buf,int length);
 
+//addition
+void doFind(char * command,Tools * tool);
 		
 #endif
