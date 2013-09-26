@@ -62,10 +62,10 @@ bool load(const char * path,Tools * tool)
 		return false;
 	}
 
-	char pn[22]={0};
-	while(fread(pn,1,22,file)==22)
+	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH]={0};
+	while(fread(pn,1,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,file)==22)
 	{
-		addPhoneNumToNext(tool,&pn[0],&pn[10]);
+		addPhoneNumToNext(tool,&pn[0],&pn[PHONE_NAME_LENGTH]);
 		formatPN(tool->last);
 	}
 
@@ -86,8 +86,8 @@ bool save(char * path,Tools * tool)
 
 	while(p_num != NULL)
 	{
-		char TMP[23] = {0};
-		fwrite(PN2str(p_num,TMP),1,22,file);
+		char TMP[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH+1] = {0};
+		fwrite(PN2str(p_num,TMP),1,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,file);
 		p_num = p_num->NextP;
 	}
 
@@ -101,7 +101,7 @@ void show(Tools * tool )
 
 	while(p_num != NULL )
 	{
-		char TMP[23] = {0};
+		char TMP[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH+1] = {0};
 		printf("%s\n",PN2str(p_num,TMP));
 		p_num = p_num->NextP;
 	}
@@ -111,7 +111,7 @@ void formatPN(phoneNum * p_num)
 {
 	bool flag = false;
 
-	for(int i = 0;i<10;i++)
+	for(int i = 0;i<PHONE_NAME_LENGTH;i++)
 	{
 		if((p_num->name[i]<'A')||(p_num->name[i]>'Z'&&p_num->name[i]<'a')||(p_num->name[i]>'z'))
 			flag = true;
@@ -119,7 +119,7 @@ void formatPN(phoneNum * p_num)
 	}
 
 	flag = false ;
-	for(int i = 0 ;i<12;i++)
+	for(int i = 0 ;i<PHONE_NUM_LENGTH;i++)
 	{
 		if(p_num->num[i]<'0'||p_num->num[i]>'9')
 			flag = true;
@@ -130,15 +130,14 @@ void formatPN(phoneNum * p_num)
 
 char * PN2str(phoneNum * p_num,char * output)
 {
-	memset(output,' ',23);
-	output[22] = 0;
+	memset(output,' ',PHONE_NAME_LENGTH+PHONE_NUM_LENGTH+1);
+	output[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH] = 0;
 
 	memcpy(output,p_num->name,strlen(p_num->name));
-	memcpy(&output[10],p_num->num,strlen(p_num->num));
+	memcpy(&output[PHONE_NAME_LENGTH],p_num->num,strlen(p_num->num));
 
 	return output;
 }
-
 
 void mainLoop(Tools * tool)
 {
@@ -270,7 +269,7 @@ void doFind(char * command,Tools * tool)
 
 	while(p_num!=NULL)
 	{
-		char TMP[23] = {0};
+		char TMP[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH+1] = {0};
 		if((!strcmp(p_num->name,searchBuf))||(!strcmp(p_num->num,searchBuf)))
 		{
 			printf("%s\n",PN2str(p_num,TMP));	
