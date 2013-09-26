@@ -72,3 +72,11 @@ void writeTo(unsigned char in,BUFFER * buffer,hTree * h_map,FILE *wf)
 		buffer->pBlen-=32;
 	}
 }
+
+void	compression(char * source,char * dest)
+{
+	hTree * pp = initHTreeMap();
+	hTree * ss = loadFile(pp,source);
+	saveHuffmanToFile(ss,EncodeToNewFile(source,dest,pp));
+	destoryHTreeMap(pp,ss);
+}

@@ -3,15 +3,18 @@
 #include "Encode.h"
 
 #include <string.h>
-void main()
+void main(int argc,char * argv[])
 {
-	hTree * pp = initHTreeMap();
-	hTree * ss = loadFile(pp,"D:\\PanRui\\20100916.mp4");
+	if(argc != 4)
+	{
+		Usage();
+		return ;
+	}
 
-	char leftBit = EncodeToNewFile("D:\\PanRui\\20100916.mp4","D:\\PR.bin",pp);
-	DecodeFromFile("D:\\PR.bin","D:\\PR.mp4",ss,leftBit);
-
-	destoryHTreeMap(pp,ss);
-	
-
+	if(memcmp(argv[1],"-c",3)==0)
+	compression(argv[2],argv[3]);
+	else if(memcmp(argv[2],"-u",3)==0)
+	decompression(argv[2],argv[3]);
+	else 
+	Usage();
 }

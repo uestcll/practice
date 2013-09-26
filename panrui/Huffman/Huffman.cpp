@@ -118,7 +118,6 @@ hTree * genHTree(hTree * h_map)
 	}
 	return h_map;
 }
-
 MINTWO minTwo(hTree * h_map)
 {
 	MINTWO min;
@@ -158,8 +157,6 @@ void genHFCode(hTree * h_map,unsigned char * code,char bit)
 		genHFCode(h_map->right,shl(codeTMP1,1,bit),bit+1);
 
 }
-
-
 unsigned char *shl(unsigned char * code,unsigned char value,unsigned char bit)
 {
 	int i = 0;
@@ -196,3 +193,80 @@ void	destoryHTreeMap(hTree * h_map,hTree * h_tree)
 		destoryHTreeMap(NULL,h_tree->right);
 	free(h_tree);
 }
+
+void	saveHuffmanToFile(hTree * h_tree,char leftBit)
+{
+	FILE * fd = fopen(HUFFMAN_TREE_PATH,"wb");
+	
+	fwrite(&leftBit,1,1,fd);
+	saveRecurrence(h_tree,fd);
+
+	fclose(fd);
+}
+void	saveRecurrence(hTree * h_tree,FILE * fd)
+{
+	hTreeFile tmp;
+	
+	tmp.bit = h_tree->bit;
+	tmp.value = h_tree->value;
+	memcpy(tmp.hfCode,h_tree->hfCode,32);
+	if(h_tree->left == NULL||h_tree->right == NULL)
+		tmp.isLeave = 1;
+	else 
+		tmp.isLeave = 0;
+
+	fwrite(&tmp,sizeof(hTreeFile),1,fd);
+
+	if(h_tree->left != NULL)
+			saveRecurrence(h_tree->left,fd);
+	if(h_tree->right != NULL)
+			saveRecurrence(h_tree->right,fd);		
+}
+
+hTree *	loadHuffmanFromFile(char * leftBit)
+{
+	FILE * fd = fopen(HUFFMAN_TREE_PATH,"rb");
+	
+	fread(leftBit,1,1,fd);
+
+	hTree * h_Head = (hTree *)calloc(1,sizeof(hTree));
+	loadRecurrence(h_Head,fd);
+	
+	fclose(fd);
+	return h_Head;
+}
+void	loadRecurrence(hTree * &h_tree,FILE *fd)
+{
+	hTreeFile tmp;
+	fread(&tmp,sizeof(hTreeFile),1,fd);
+	
+	h_tree = (hTree *)calloc(1,sizeof(hTree));
+	h_tree->value = tmp.value;
+	h_tree->bit = tmp.bit;
+	memcpy(h_tree->hfCode,tmp.hfCode,32);
+	
+	if(tmp.isLeave)
+		return ;
+	else
+	{
+		loadRecurrence(h_tree->left,fd);
+		loadRecurrence(h_tree->right,fd);
+	}
+}
+void	destoryLoadTree(hTree * h_tree)
+{
+	if(h_tree->left!=NULL)
+		destoryLoadTree(h_tree->left);
+	if(h_tree->right!=NULL)
+		destoryLoadTree(h_tree->right);
+	free(h_tree);
+}
+
+
+void	Usage()
+{
+	printf("Usage:\n");
+	printf("\t-c [filename] [compressed filename]\n");
+	printf("\t-u [compressed filename] [filename]\n");
+}
+

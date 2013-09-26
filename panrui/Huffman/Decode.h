@@ -6,7 +6,7 @@
 void	DecodeFromFile(char * source,char * dest,hTree * h_tree,char leftBit);
 unsigned char	Decode(FILE * rf,hTree * h_tree,char *signal,unsigned long length,char leftBit);
 
-
+void	decompression(char * source,char * dest);
 
 
 #endif

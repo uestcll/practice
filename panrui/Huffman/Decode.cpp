@@ -2,7 +2,12 @@
 void DecodeFromFile(char * source,char * dest,hTree * h_tree,char leftBit)
 {
 	FILE * rf = fopen(source,"rb");
+	if(rf == NULL)
+		return;
+
 	FILE * wf = fopen(dest,"wb");
+	if(wf == NULL)
+		return;
 	fseek(rf,0,SEEK_END);
 	unsigned long length = ftell(rf);
 	fseek(rf,0,SEEK_SET);
@@ -57,4 +62,12 @@ unsigned char	Decode(FILE * rf,hTree * h_tree,char *signal,unsigned long length,
 	}
 
 
+}
+
+void	decompression(char * source,char *dest)
+{
+	char leftBit = 0;
+	hTree *sp = loadHuffmanFromFile(&leftBit);
+	DecodeFromFile(source,dest,sp,leftBit);
+	destoryLoadTree(sp);	
 }

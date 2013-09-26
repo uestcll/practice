@@ -5,6 +5,8 @@
 #include<string.h>
 #include<stdlib.h>
 
+#define HUFFMAN_TREE_PATH ".\\huffman"
+
 struct hTree
 {
 	hTree * parent;
@@ -17,6 +19,14 @@ struct hTree
 	int				count;
 	unsigned char	hfCode[32];
 
+};
+
+struct hTreeFile
+{
+	unsigned char isLeave;
+	unsigned char value;
+	unsigned char bit;
+	unsigned char hfCode[32];
 };
 
 struct MINTWO
@@ -34,6 +44,13 @@ void	genHFCode(hTree * h_map,unsigned char * code ,char bit);
 unsigned char *shl(unsigned char * code,unsigned char value,unsigned char bit);
 void	destoryHTreeMap(hTree * h_map,hTree * h_tree);
 
+void	saveHuffmanToFile(hTree * h_tree,char leftBit);
+void	saveRecurrence(hTree * h_tree,FILE * fd);
+
+hTree	*loadHuffmanFromFile(char * leftBit);
+void	loadRecurrence(hTree * &h_tree,FILE * fd);
+void	destoryLoadTree(hTree * h_tree);
+void	Usage();
 
 
 
