@@ -6,11 +6,12 @@
 
 #define PHONE_NAME_LENGTH 10
 #define PHONE_NUM_LENGTH 12
+#define PHONE_STRUCT_LENGTH ((PHONE_NAME_LENGTH)+(PHONE_NUM_LENGTH))
 
 #define COMMAND_LEN_MAX 200
 #define PATH_LEN_MAX 100
 #define DEFAULT_PATH ".\\phonebook.txt"
-#define DEFAULT_PATH_CP ".\\phonebook.txt.txt"
+#define BUFF_SIZE  ((PHONE_STRUCT_LENGTH)*4)
 
 #define	LETTER_NUM 26
 
@@ -27,7 +28,9 @@
 
 struct	Index
 {
-	int offset[LETTER_NUM];
+	int	 cur_p;
+	bool IsIndirect[LETTER_NUM];
+	long offset[LETTER_NUM];
 };
 struct phoneNum
 {
@@ -36,21 +39,23 @@ struct phoneNum
 };
 struct Tools
 {
+
 	Index	 *	index;
-	int			cur_index;
-	FILE	 *  deffd;
+	FILE	 *  fd;
 	int			pn_size;
 	phoneNum *	pn;
 };
 
-void InitIndex(Tools * tool);
-void UpdateIndex(Tools * tool,int c_offset);
-void InitBuffer(Tools * tool,char sign);
+void InitIndex(Index * index,FILE * fd);
+void InitIndexByRecurrence(Index * index,FILE * fd,int depth,long limit);
+void destoryIndex(Index * index);
+void UpdateIndex(Index * index,int c_offset);
+Index * InitBuffer(Tools * tool,char *sign);
 void ClearBuffer(Tools * tool);
 
 void initTool(Tools * tool);
 void addPhoneNum(Tools * tool,char * name,char *num);
-void InsertToFile(Tools * tool,char * pn,int offset);
+void InsertToFile(Tools * tool,char * pn,long offset);
 
 void destoryTool(Tools * tool);
 

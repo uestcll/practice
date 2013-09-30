@@ -1,132 +1,197 @@
 #include "phonebook.h"
+
 void initTool(Tools * tool)
 {
-	tool->index = (Index *)calloc(1,sizeof(Index));
-	tool->cur_index = -1;
-	
-	tool->deffd = NULL;
-	
-	tool->pn_size = 0;
+	tool->index = NULL;
+	tool->fd = NULL;
 	tool->pn = NULL;
-	InitIndex(tool);
+	tool->pn_size = 0;
+
+	tool->fd = fopen(DEFAULT_PATH,"r");
+	InitIndex(tool->index,tool->fd);
+	fclose(tool->fd);
+}
+void destoryTool(Tools * tool)
+{
+	if(tool->pn!=NULL)
+		ClearBuffer(tool);
+	if(tool->index !=NULL)
+		destoryIndex(tool->index);
+
 }
 
-void InitIndex(Tools * tool)
+void InitIndex(Index * index , FILE * fd)
 {
-	tool->deffd = fopen(DEFAULT_PATH,"r");
-	
-	if(tool->deffd == NULL)
-	{
-		printf("No default file\n");
-		return ;
-	}	
-
-	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH]={0};
-	while(fread(pn,1,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,tool->deffd)==22)
-	{
-		if(tool->index->offset[pn[0]-'a'] == 0)
-			tool->index->offset[pn[0]-'a'] == ftell(tool->deffd)-PHONE_NAME_LENGTH-PHONE_NUM_LENGTH;
-	}
-
-
-	fclose(tool->deffd);
-	tool->deffd = NULL;
+	fseek(fd,0,SEEK_END);
+	long flen = ftell(fd);
+	fseek(fd,0,SEEK_SET);
+	InitIndexByRecurrence(index,fd,0,flen);
 }
-void UpdateIndex(Tools * tool,int c_offset)
+void destoryIndex(Index * index)
 {
-	for(int i = tool->cur_index;i<LETTER_NUM;i++)
+	for(int i = 0;i<25;i++)
 	{
-		tool->index->offset[i]+=c_offset;
+		if(index->IsIndirect[i])
+			destoryIndex((Index *)(index->offset[i]));
 	}
+	free(index);
 }
-void InitBuffer(Tools * tool,char sign)
+void InitIndexByRecurrence(Index * index,FILE * fd,int depth,long limit)
 {
-	tool->deffd = fopen(DEFAULT_PATH,"r");
-
-	if(sign == 'z')
+	index = (Index *)calloc(1,sizeof(Index));
+	char pn[PHONE_STRUCT_LENGTH]= {0};
+	char current = 'a';
+	for(int i = 0;i<LETTER_NUM;i++)
 	{
-		fseek(tool->deffd,0,SEEK_END);
-		tool->pn_size = ftell(tool->deffd)-tool->index->offset[sign-'a'];
-		fseek(tool->deffd,0,SEEK_SET);
-	}
-	else
-	{
-		tool->pn_size = tool->index->offset[sign-'a']-tool->index->offset[sign-'a'+1];
-	}
-
-	if(tool->pn_size == 0)
+		long lenSingal = 0;
+		index->offset[i] = ftell(fd);
+		while(PHONE_STRUCT_LENGTH==fread(pn,PHONE_STRUCT_LENGTH,1,fd))
 		{
-			fclose(tool->deffd);
-			return ;
+			lenSingal += PHONE_STRUCT_LENGTH;
+			
+			if(limit == ftell(fd))
+			{
+				//处理后面的
+				for(int j = i;j<LETTER_NUM;j++)
+				{
+					index->offset[j] = limit;		
+				}
+				return ;
+			}
+			
+			if(pn[depth - 'a']!=current)
+			{
+				fseek(fd,-PHONE_STRUCT_LENGTH,SEEK_CUR);
+				break;
+			}
 		}
-	tool->pn = (phoneNum *)calloc(tool->pn_size/(PHONE_NAME_LENGTH+PHONE_NUM_LENGTH),sizeof(phoneNum));
-
-	fseek(tool->deffd,tool->index->offset[sign-'a'],SEEK_SET);
-	for(int i = 0 ; i< tool->pn_size/(PHONE_NAME_LENGTH+PHONE_NUM_LENGTH);i++)
-	{
-		fread((char *)&(tool->pn[i]),sizeof(phoneNum),1,tool->deffd);
+		if(lenSingal>BUFF_SIZE)
+		{
+			long limit = ftell(fd);
+			fseek(fd,index->offset[i],SEEK_SET);
+			index->IsIndirect[i] = 1;
+			InitIndexByRecurrence((Index *)(index->offset[i]),fd,depth+1,limit);
+		}
+		current++;
 	}
 
-	tool->cur_index = sign-'a';
+}
 
-	fclose(tool->deffd);
-	tool->deffd = NULL;
+void UpdateIndex(Index * index,int c_offset)
+{
+	Index * p = index;
+	for(int i = p->cur_p+1;i<LETTER_NUM;i++)
+	{
+		if(p->IsIndirect[i] == false)
+		{
+			p->offset[i]+=c_offset;
+		}
+		else
+		{
+			Index * q = (Index *)(p->offset[i]);
+			q->cur_p = 0;
+			UpdateIndex(q,c_offset);
+		}
+	}
+}
+Index * InitBuffer(Tools * tool,char *sign)
+{
+	tool->fd = fopen(DEFAULT_PATH,"r");
+	Index * p = tool->index;
+	long next_off = LONG_MAX;
+	if(p = NULL)
+	{
+		printf("init buffer before init Index");
+		return NULL;
+	}
+	p->cur_p = (int )(sign - 'a');
+
+	if(p->cur_p!=25)
+		next_off = p->offset[p->cur_p+1];
+
+	while(p->IsIndirect[p->cur_p]==1)
+	{
+		p = (Index *)p->offset[p->cur_p];
+		p->cur_p = *(++sign)-'a';
+		if(p->cur_p!=25)
+			next_off = p->offset[p->cur_p+1];
+	}
+
+	if(next_off == LONG_MAX)
+	{
+		fseek(tool->fd,0,SEEK_END);
+		next_off = ftell(tool->fd);
+		fseek(tool->fd,0,SEEK_SET);
+	}
+
+	fseek(tool->fd,p->offset[p->cur_p],SEEK_SET);
+
+	tool->pn_size = next_off - p->cur_p;
+	tool->pn = (phoneNum *)malloc(tool->pn_size);
+
+	fread(tool->fd,tool->pn_size,1,tool->fd);
+
+
+	fclose(tool->fd);
+
+	return p;
 
 }
 void ClearBuffer(Tools * tool)
 {
 	free(tool->pn);
-	tool->pn = NULL;
 	tool->pn_size = 0;
-	tool->cur_index =-1;
 }
 
-void addPhoneNum(Tools * tool,char * name,char *num)
+void addPhoneNum(Tools * tool,char * name , char * num)
 {
-	if(name == NULL || num == NULL )
+	if((name == NULL) || (num == NULL))
 	{
-		printf("infomation is not completed\n");
+		printf("cannot add without name or num");
 		return;
 	}
-	InitBuffer(tool,name[0]);
+	Index * p = InitBuffer(tool,name);
 
-	int i = 0;
-	for(;i<tool->pn_size/(PHONE_NAME_LENGTH+PHONE_NUM_LENGTH;i++)
+	int insertPlace = 0;
+	for(;insertPlace < tool->pn_size/PHONE_STRUCT_LENGTH;insertPlace++)
 	{
-		if(strcmp((char *)&(tool->pn[i]),name)<0)
+		if(memcmp(name,&(tool->pn[insertPlace]),PHONE_NAME_LENGTH)<0)
 			break;
 	}
-	
-	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH]={0};
-	memcpy(pn,name,PHONE_NAME_LENGTH);
-	memcpy(&pn[PHONE_NAME_LENGTH],num,PHONE_NUM_LENGTH);
-	InsertToFile(tool,pn,(i+1)*PHONE_NAME_LENGTH+PHONE_NUM_LENGTH);
+
+	long insertOff = insertPlace*PHONE_STRUCT_LENGTH + p->offset[p->cur_p];
+	phoneNum insertStruct;
+	memcpy(insertStruct.name,name,PHONE_NAME_LENGTH);
+	memcpy(insertStruct.num,num,PHONE_NUM_LENGTH);
+
 	ClearBuffer(tool);
-
-	UpdateIndex(tool,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH);
-}
-void InsertToFile(Tools * tool,char * pn,int offset)
-{
-	tool->deffd = fopen(DEFAULT_PATH_CP,"w");
-	FILE * file = fopen(DEFAULT_PATH,"r");
-	long long int len = offset+tool->index->offset[tool->cur_index];
-
-	char buffer[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH];
-	long long int readLen = 0;
 	
-
-
-	fclose(file);
-	fclose(tool->deffd);
-	
+	InsertToFile(tool,(char *)&insertStruct,insertOff);
 }
-
-void destoryTool(Tools * tool)
+void InsertToFile(Tools * tool,char * pn,long offset)
 {
-	if(tool->pn!=NULL)
-	ClearBuffer(tool);
-	free(tool->index);
+	tool->fd = fopen(DEFAULT_PATH,"rw");
+
+	phoneNum readBuf;
+	phoneNum writeBuf;
+	memcpy((char *)&writeBuf,pn,PHONE_STRUCT_LENGTH);
+
+	fseek(tool->fd,0,SEEK_END);
+	long fileEnd = ftell(tool->fd);
+
+	fseek(tool->fd,offset,SEEK_SET);
+
+	for(long curOff = offset;curOff<fileEnd+PHONE_STRUCT_LENGTH;curOff+=PHONE_STRUCT_LENGTH)
+	{
+		fread((char *)&readBuf,PHONE_STRUCT_LENGTH,1,tool->fd);
+		fseek(tool->fd,-PHONE_STRUCT_LENGTH,SEEK_CUR);
+		fwrite((char *)&writeBuf,PHONE_STRUCT_LENGTH,1,tool->fd);
+	}
+
+	fclose(tool->fd);
 }
+
+
 
 bool load(const char * path,Tools * tool)
 {
@@ -158,30 +223,30 @@ bool save(char * path,Tools * tool)
 		return false ;
 	}
 	
-	tool->deffd = fopen(DEFAULT_PATH,"r");
+	tool->fd = fopen(DEFAULT_PATH,"r");
 
 	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH]={0};
-	while(fread(pn,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,1,tool->deffd)==22)
+	while(fread(pn,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,1,tool->fd)==22)
 	{
 		fwrite(pn,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,1,file);
 	}
 
-	fclose(tool->deffd);
+	fclose(tool->fd);
 	fclose(file );
 	return true;
 }
 
 void show(Tools * tool )
 {
-	tool->deffd = fopen(DEFAULT_PATH,"r");
+	tool->fd = fopen(DEFAULT_PATH,"r");
 
-	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH]={0};
-	while(fread(pn,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,1,tool->deffd)==22)
+	char pn[PHONE_NAME_LENGTH+PHONE_NUM_LENGTH+1]={0};
+	while(fread(pn,PHONE_NAME_LENGTH+PHONE_NUM_LENGTH,1,tool->fd)==22)
 	{
 		printf("%s\n",pn);
 	}
 
-	fclose(tool->deffd);
+	fclose(tool->fd);
 }
 /*
 void formatPN(phoneNum * p_num)
@@ -218,8 +283,7 @@ char * PN2str(phoneNum * p_num,char * output)
 */
 void mainLoop(Tools * tool)
 {
-	load(DEFAULT_PATH,tool);
-
+	initTool(&tool);
 	while(true)
 	{
 		printf("#");
@@ -238,6 +302,7 @@ void mainLoop(Tools * tool)
 			break;
 		}
 	}
+	destoryTool(&tool);
 }
 
 bool dispatchCMD(char * command,Tools * tool)
