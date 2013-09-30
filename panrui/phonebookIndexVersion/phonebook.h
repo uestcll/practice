@@ -10,7 +10,9 @@
 
 #define COMMAND_LEN_MAX 200
 #define PATH_LEN_MAX 100
-#define DEFAULT_PATH ".\\phonebook.txt"
+#define DEFAULT_PATH	".\\phonebook.txt"
+#define DEFAULT_PATH_CP ".\\phonebook.txt.tmp"
+
 #define BUFF_SIZE  ((PHONE_STRUCT_LENGTH)*4)
 
 #define	LETTER_NUM 26
@@ -46,8 +48,8 @@ struct Tools
 	phoneNum *	pn;
 };
 
-void InitIndex(Index * index,FILE * fd);
-void InitIndexByRecurrence(Index * index,FILE * fd,int depth,long limit);
+void InitIndex(Index * &index,FILE * fd);
+void InitIndexByRecurrence(Index * &index,FILE * fd,int depth,long limit);
 void destoryIndex(Index * index);
 void UpdateIndex(Index * index,int c_offset);
 Index * InitBuffer(Tools * tool,char *sign);
