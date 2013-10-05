@@ -6,10 +6,11 @@
 #include <string>
 #include <iostream>
 
-
-
 #define CMD_LEN 3
+#define DEFAULT_PATH "./phonebook.txt"
+
 using namespace std;
+
 class PBexecute
 {
 private:

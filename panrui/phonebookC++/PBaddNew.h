@@ -4,7 +4,7 @@
 class PBaddNew:public PBexecute
 {
 private:
-	void analysisPara(string para,string &name,string &num);
+	bool analysisPara(string para,string &name,string &num);
 protected:
 public:
 	PBaddNew();

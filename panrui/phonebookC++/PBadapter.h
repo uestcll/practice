@@ -2,6 +2,9 @@
 #define PB_ADAPTER
 
 #include "PBexecute.h"
+#include "PBsaveLocal.h"
+#include "PBsaveRemote.h"
+#include "PBload.h"
 #include "PBquit.h"
 #include "PBaddNew.h"
 #include "PBshow.h"
