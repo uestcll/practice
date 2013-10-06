@@ -26,6 +26,7 @@ void PBadapter::initRegList()
 	regSingle(new PBsaveLocal());
 	regSingle(new PBsaveRemote());
 	regSingle(new PBload());
+	regSingle(new PBsearch());
 }
 
 void PBadapter::uninitRegList()

@@ -4,6 +4,7 @@
 #include "PBexecute.h"
 #include "PBsaveLocal.h"
 #include "PBsaveRemote.h"
+#include "PBsearch.h"
 #include "PBload.h"
 #include "PBquit.h"
 #include "PBaddNew.h"
