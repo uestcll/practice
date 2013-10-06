@@ -17,6 +17,7 @@ private:
 	vector<PBitem *> pb_item;
 	string			curCMD;
 	PBexecute * analysisCMD();
+	void init();
 	void listenCMD();
 	bool dispatchCMD(PBexecute * aimExecute);
 protected:

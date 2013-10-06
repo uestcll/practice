@@ -33,6 +33,8 @@ bool PBmainLoop::dispatchCMD(PBexecute * aimExecute )
 
 void PBmainLoop::mainloop()
 {
+	init();
+
 	do
 	{
 		cout<<'#';
@@ -40,4 +42,11 @@ void PBmainLoop::mainloop()
 		listenCMD();
 	
 	}while(dispatchCMD(analysisCMD()));
+}
+
+void PBmainLoop::init()
+{
+	curCMD = "-ld ";
+	curCMD +=DEFAULT_PATH;
+	dispatchCMD(analysisCMD());
 }

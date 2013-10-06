@@ -24,6 +24,7 @@ bool PBaddNew::executeCMD(vector<PBitem *> &pb_item,string para)
 	if(!analysisPara(para,name,num))
 	{
 		cout<<"wrong para while adding item"<<endl;
+		PBusage usage;
 		return true;
 	}
 

@@ -25,6 +25,7 @@ bool PBsearch::executeCMD(vector<PBitem *> &pb_item,string para)
 	if(!analysisPara(para,info))
 	{
 		cout<<"para wrong while searching"<<endl;
+		PBusage usage;
 		return true;
 	}
 

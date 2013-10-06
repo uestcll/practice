@@ -33,6 +33,7 @@ bool PBload::executeCMD(vector<PBitem *> &pb_item,string para)
 	if(!istr->is_open())
 	{
 		cout<<"open file fail while loading file"<<endl;
+		PBusage usage;
 		return true;
 	}
 

@@ -1,4 +1,5 @@
 #include "PBsave.h"
+#include "PBusage.h"
 #include <iostream>
 PBsave::PBsave()
 {
@@ -18,6 +19,7 @@ void PBsave::doSave(string path,vector<PBitem *> &pb_item)
 	if(!ostr->is_open())
 	{
 		cout<<"open file fail while saving file"<<endl;
+		PBusage usage;
 		return ;
 	}
 
