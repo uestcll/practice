@@ -14,7 +14,7 @@ PBsave::~PBsave()
 void PBsave::doSave(string path,vector<PBitem *> &pb_item)
 {
 	ostr = new ofstream();
-	ostr->open(path,ios::binary|ios::trunc);
+	ostr->open(path.c_str(),ios::binary|ios::trunc);
 	
 	if(!ostr->is_open())
 	{

@@ -1,5 +1,6 @@
 #include "PBmainLoop.h"
 #include "PBadapter.h"
+#include "PBusage.h"
 
 PBmainLoop::PBmainLoop(PBadapter * pb_adapter)
 {
@@ -28,6 +29,13 @@ void PBmainLoop::listenCMD()
 
 bool PBmainLoop::dispatchCMD(PBexecute * aimExecute )
 {
+
+	if(aimExecute == NULL)
+	{
+		PBusage usage;
+		return true;
+	}
+	
 	return aimExecute->executeCMD(pb_item,curCMD.substr(CMD_LEN,curCMD.length()-CMD_LEN));
 }
 

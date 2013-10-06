@@ -28,7 +28,7 @@ bool PBload::executeCMD(vector<PBitem *> &pb_item,string para)
 	}
 
 	istr = new ifstream();
-	istr->open(path,ios::binary);
+	istr->open(path.c_str(),ios::binary);
 
 	if(!istr->is_open())
 	{
