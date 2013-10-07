@@ -3,7 +3,8 @@
 hTree * initHTreeMap()
 {
 	hTree * h_map = (hTree *)calloc(256,sizeof(hTree));
-	if(h_map == NULL) return NULL;
+	if(h_map == NULL)
+		return NULL;
 
 	for(int i = 0;i<256;i++)
 	{
@@ -17,6 +18,7 @@ hTree * initHTreeMap()
 		else
 		h_map[i].parent = NULL;
 	}
+	
 	return h_map;
 
 }
@@ -24,21 +26,19 @@ hTree * initHTreeMap()
 hTree * loadFile(hTree * h_map,char * path)
 {
 	FILE * fd = fopen(path,"rb");
-	if(fd == NULL) return NULL;
+	if(fd == NULL)
+		return NULL;
 
 	unsigned char code[32]={0};
 	unsigned char bit = 0;
-	if(counter(h_map,fd) == false ) return NULL;
+	
+	if(counter(h_map,fd) == false )
+		return NULL;
+	
 	hTree * h_tree = genHTree(h_map);
+	
 	genHFCode(h_tree,code,bit);
 
-	for(int i =0;i<256;i++)
-	{
-		printf("value:%02hhx  \tlen%d\t0x",h_map[i].value,h_map[i].bit);
-		for(int j = 28;j<32;j++)
-			printf("%02hhx",h_map[i].hfCode[j]);
-		printf("\n");
-	}
 	fclose(fd);
 	return h_tree;
 }
@@ -50,6 +50,7 @@ bool counter(hTree * h_map,FILE * fd)
 
 	unsigned int len = ftell(fd);
 	fseek(fd,0,SEEK_SET);
+
 	for(unsigned int i=0;i<len;i++)
 	{
 		in=fgetc(fd);
@@ -63,19 +64,24 @@ hTree * genHTree(hTree * h_map)
 	while(h_map->next != NULL)
 	{
 		MINTWO min = minTwo(h_map);
+
 		hTree * ntree = (hTree *)calloc(1,sizeof(hTree));
 		ntree->left = min.sec;
 		ntree->right = min.fir;
 		ntree->count = ntree->left->count+ntree->right->count;
+
 		if(min.fir->next==min.sec)
 		{
 			ntree->parent = ntree->right->parent;
 			ntree->next = ntree->left->next;
+			
 			if(ntree->right->parent!=NULL)
 				ntree->right->parent->next = ntree;
 			else h_map = ntree;
+			
 			if(ntree->left->next!=NULL)
 				ntree->left->next->parent = ntree;
+			
 			ntree->right->parent = ntree;
 			ntree->left->parent = ntree;
 			ntree->right->next = NULL;
@@ -85,11 +91,14 @@ hTree * genHTree(hTree * h_map)
 		{
 			ntree->next = ntree->right->next;
 			ntree->parent = ntree->left->parent;
+			
 			if(ntree->left->parent!=NULL)
 				ntree->left->parent->next = ntree;
 			else h_map = ntree;
+			
 			if(ntree->right->next !=NULL)
 				ntree->right->next->parent = ntree;
+			
 			ntree->left->parent = ntree;
 			ntree->right->parent = ntree;
 			ntree->left->next = NULL;
@@ -99,9 +108,11 @@ hTree * genHTree(hTree * h_map)
 		{
 			ntree->next = ntree->right->next;
 			ntree->parent = ntree->right->parent;
+			
 			if(ntree->right->parent!=NULL)
 				ntree->right->parent->next = ntree;
 			else h_map = ntree;
+			
 			if(ntree->right->next!=NULL)
 				ntree->right->next->parent = ntree;
 			ntree->right->parent = ntree;
@@ -110,8 +121,10 @@ hTree * genHTree(hTree * h_map)
 			if(ntree->left->parent!=NULL)
 				ntree->left->parent->next = ntree->left->next;
 			else h_map = ntree->left->next;
+			
 			if(ntree->left->next !=NULL)
 				ntree->left->next->parent = ntree->left->parent;
+			
 			ntree->left->parent = ntree;
 			ntree->left->next = NULL;
 		}
@@ -132,14 +145,17 @@ MINTWO minTwo(hTree * h_map)
 		step = step->next ;
 	}
 	step = h_map;
+	
 	if(min.fir==h_map)
 	min.sec = h_map->next;
+	
 	while(step!= NULL)
 	{
 		if((min.sec->count > step->count )&& (min.fir!=step))
 			min.sec = step;
 		step = step->next;
 	}
+	
 	return min;
 }
 
@@ -147,10 +163,12 @@ void genHFCode(hTree * h_map,unsigned char * code,char bit)
 {
 	memcpy(h_map->hfCode,code,32);
 	h_map->bit = bit;
+	
 	unsigned char codeTMP0[32]={0};
 	unsigned char codeTMP1[32]={0};
 	memcpy(codeTMP0,code,32);
 	memcpy(codeTMP1,code,32);
+	
 	if( h_map->left!=NULL )
 		genHFCode(h_map->left,shl(codeTMP0,0,bit),bit+1);
 	if( h_map->right != NULL)
@@ -163,6 +181,7 @@ unsigned char *shl(unsigned char * code,unsigned char value,unsigned char bit)
 	unsigned char tmp_last =value;
 	unsigned char tmp_next =0;
 	int ext_bit = bit;
+	
 	while(ext_bit>=0)
 	{	
 		tmp_next = code[31-i]&0x80;
@@ -173,6 +192,7 @@ unsigned char *shl(unsigned char * code,unsigned char value,unsigned char bit)
 		ext_bit-=8;
 		tmp_last = tmp_next;
 	}
+	
 	return code;
 }
 
@@ -191,6 +211,7 @@ void	destoryHTreeMap(hTree * h_map,hTree * h_tree)
 		destoryHTreeMap(NULL,h_tree->left);
 	if(h_tree->right != NULL)
 		destoryHTreeMap(NULL,h_tree->right);
+
 	free(h_tree);
 }
 

@@ -13,7 +13,7 @@ void main(int argc,char * argv[])
 
 	if(memcmp(argv[1],"-c",3)==0)
 	compression(argv[2],argv[3]);
-	else if(memcmp(argv[2],"-u",3)==0)
+	else if(memcmp(argv[1],"-u",3)==0)
 	decompression(argv[2],argv[3]);
 	else 
 	Usage();
