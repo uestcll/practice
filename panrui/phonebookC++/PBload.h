@@ -3,15 +3,16 @@
 
 #include "PBexecute.h"
 #include "PBaddNew.h"
+#include "PBTool.h"
 
 #include <fstream>
+
 using namespace std;
 class PBload:public PBexecute
 {
 private:
 	ifstream *	istr;
 	PBaddNew *	pb_addNew;
-	bool analysisPara(string para,string &path);
 protected:
 public:
 	PBload();

@@ -1,10 +1,10 @@
 #ifndef PB_ADD_NEW
 #define PB_ADD_NEW
 #include "PBexecute.h"
+#include "PBTool.h"
 class PBaddNew:public PBexecute
 {
 private:
-	bool analysisPara(string para,string &name,string &num);
 protected:
 public:
 	PBaddNew();

@@ -22,7 +22,7 @@ bool PBsearch::executeCMD(vector<PBitem *> &pb_item,string para)
 	vector<PBitem *>::iterator	it = pb_item.begin();
 	string info;
 
-	if(!analysisPara(para,info))
+	if(!PBTool::analysisPara(para,info))
 	{
 		cout<<"para wrong while searching"<<endl;
 		PBusage usage;
@@ -47,13 +47,3 @@ bool PBsearch::executeCMD(vector<PBitem *> &pb_item,string para)
 	return true;
 }
 
-bool PBsearch::analysisPara(string para,string &info)
-{
-	string::size_type info_f = para.find_first_not_of(' ',0);
-	if(info_f == string::npos)
-		return false;
-
-	info = para.substr(info_f,para.length()-info_f);
-
-	return true;	
-}

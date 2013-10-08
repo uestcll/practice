@@ -2,10 +2,10 @@
 #define PB_SEARCH
 #include "PBexecute.h"
 #include "PBshow.h"
+#include "PBTool.h"
 class PBsearch:public PBexecute
 {
 private:
-	bool analysisPara(string para,string &info);
 protected:
 public:
 	PBsearch();

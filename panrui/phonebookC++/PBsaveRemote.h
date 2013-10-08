@@ -3,14 +3,13 @@
 
 #include "PBexecute.h"
 #include "PBsave.h"
-
+#include "PBTool.h"
 using namespace std;
 
 class PBsaveRemote:public PBexecute
 {
 private:
 	PBsave * pb_save;
-	bool analysisPara(string para,string &path);
 protected:
 public:
 	PBsaveRemote();

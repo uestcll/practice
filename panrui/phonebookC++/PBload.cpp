@@ -21,7 +21,7 @@ bool PBload::executeCMD(vector<PBitem *> &pb_item,string para)
 {
 	string path;
 
-	if(!analysisPara(para,path))
+	if(!PBTool::analysisPara(para,path))
 	{
 		cout<<"error while adding new item"<<endl;
 		return true;
@@ -48,14 +48,4 @@ bool PBload::executeCMD(vector<PBitem *> &pb_item,string para)
 	return true;
 }
 
-bool PBload::analysisPara(string para,string &path)
-{
-	string::size_type path_f = para.find_first_not_of(' ',0);
-	if(path_f == string::npos)
-		return false;
-
-	path = para.substr(path_f,para.length()-path_f);
-	
-	return true;
-}
 

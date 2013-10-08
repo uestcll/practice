@@ -20,7 +20,7 @@ bool PBsaveRemote::isExecute(string cmd)
 bool PBsaveRemote::executeCMD(vector<PBitem *> &pb_item,string para)
 {
 	string path;
-	if(!analysisPara(para,path))
+	if(!PBTool::analysisPara(para,path))
 	{
 		cout<<"save para error while saving"<<endl;
 		return true;
@@ -30,13 +30,3 @@ bool PBsaveRemote::executeCMD(vector<PBitem *> &pb_item,string para)
 	return true;
 }
 
-bool PBsaveRemote::analysisPara(string para,string &path)
-{
-	string::size_type path_f = para.find_first_not_of(' ',0);
-	if(path_f == string::npos)
-		return false;
-
-	path = para.substr(path_f,para.length()-path_f);
-
-	return true;
-}
