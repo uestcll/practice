@@ -19,7 +19,7 @@ private:
 protected:
 public:
 	PBexecute();
-	~PBexecute();
+	virtual ~PBexecute();
 	virtual bool isExecute(string cmd) = 0;
 	virtual bool executeCMD(vector<PBitem *> &pb_item,string para) = 0;
 };
