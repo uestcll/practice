@@ -42,26 +42,28 @@ bool WordFrequency::startCounting()
 void WordFrequency::saveFrequencyToFile(ofstream &ostr)
 {
 	reset();
-	int size = getSize();
-	ostr<<size;
-	if(it!=wd_freq.end())
+	string::size_type size = getSize();
+	ostr.write((char *)&size,sizeof(size));
+	while(it!=wd_freq.end())
 	{
-		ostr<<it->first<<it->second;
+		ostr.put(it->first);
+		ostr.write((char *)&(it->second),sizeof(it->second));
 		it++;
 	}
 }
 
 void WordFrequency::loadFrequencyFromFile(ifstream &istr)
 {
-	int size;
-	istr>>size;
+	string::size_type size;
+	istr.read((char *)&size,sizeof(size));
 
 	unsigned char value;
 	unsigned long long count;
 
-	for(int i = 0;i<size;i++)
+	for(unsigned int i = 0;i<size;i++)
 	{
-		istr>>value>>count;
+		value = istr.get();
+		istr.read((char *)&count,sizeof(count));
 		wd_freq.insert(pair<unsigned char,unsigned long long>(value,count));
 	}
 }

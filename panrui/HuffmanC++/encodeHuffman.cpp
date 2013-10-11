@@ -39,8 +39,8 @@ void encodeHuffman::startEnCodeOriginFile(ofstream &ostr)
 	{
 		doSingalEncode((const unsigned char )istr.get(),ostr);
 	}
-	ostr<<m_out;
-	ostr<<m_pos;
+	ostr.put(m_out);
+	ostr.put(m_pos);
 	istr.close();
 }
 
@@ -50,11 +50,11 @@ void encodeHuffman::doSingalEncode(const unsigned char value,ofstream &ostr)
 	aim->reset();
 	string::size_type size = aim->getSize();
 
-	for(int i = 0; i<size;i++)
+	for(unsigned int i = 0; i<size;i++)
 	{
 		if(m_pos == 0xFF)
 		{
-			ostr<<m_out;
+			ostr.put(m_out);
 			m_out = 0;
 			m_pos = 7;
 		}

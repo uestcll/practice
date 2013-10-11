@@ -48,7 +48,7 @@ void GenerateHuffmanTree::initByNewFile()
 {
 	m_wf = new WordFrequency(str);
 	m_map = new MapOfTree;
-	m_set = new SetOfTree(m_map);;
+	m_set = new SetOfTree(m_map);
 
 }
 
@@ -63,4 +63,35 @@ void GenerateHuffmanTree::genSingalItemCode(TreeItem * p_tree,TreeItem * m_tree,
 void GenerateHuffmanTree::SaveWordFrequency(ofstream & str)
 {
 	m_wf->saveFrequencyToFile(str);
+}
+
+void GenerateHuffmanTree::initByWordFrequency()
+{
+	m_wf = new  WordFrequency(str);
+	m_set = new SetOfTree(NULL);
+}
+
+void GenerateHuffmanTree::GenerateStart(TreeItem * & tree)
+{
+	initByWordFrequency();
+
+	ifstream istr(str,ios::binary);
+	if(!istr.is_open())
+	{
+		cout<<"open file fail while rebuild tree"<<endl;
+		return ;
+	}
+	m_wf->loadFrequencyFromFile(istr);
+	istr.close();
+
+	m_set->AddToSet(*m_wf);
+	m_set->constructTree();
+	m_tree = m_set->getTreeHead();
+
+	if(m_tree->getLT()!=NULL)
+		genHFCode(m_tree,m_tree->getLT(),0);
+	if(m_tree->getRT()!=NULL)
+		genHFCode(m_tree,m_tree->getRT(),1);
+
+	tree = m_tree;
 }
