@@ -1,26 +1,15 @@
-#include "GenerateHuffmanTree.h"
-#include "encodeHuffman.h"
-#include "decodeHuffman.h"
-
-int main()
+#include "CmdDispatchForHuffman.h"
+//#define FOR_DEBUG
+int main(int argc,char*argv[])
 {
-	GenerateHuffmanTree * huffman = new GenerateHuffmanTree("D:\\dudu.txt");
-	MapOfTree * map_t;
-	huffman->GenerateStart(map_t);
-	encodeHuffman * encode = new  encodeHuffman("D:\\dudu.txt","D:\\pp.bin",huffman,map_t);
-	encode->startEncode();
-	delete huffman;
-	delete encode;
+#ifdef FOR_DEBUG
+	CmdDispatchForHuffman  compression(4,"test","-c","D:\\dudu.txt","D:\\pp.bin");
+	CmdDispatchForHuffman  decompression(4,"test","-d","D:\\pp.bin","D:\\dudu.txt");
+#endif
 
+#ifndef FOR_DEBUG
+	CmdDispatchForHuffman  action(4,argv[0],argv[1],argv[2],argv[3]);
+#endif
 
-	TreeItem * tree_t;
-	huffman = new GenerateHuffmanTree("D:\\pp.bin");
-	huffman->GenerateStart(tree_t);
-	decodeHuffman * decode = new decodeHuffman("D:\\pp.bin","D:\\boom.txt",tree_t);
-	decode->startDecode();
-
-	delete huffman;
-	delete decode;
-
-	return false;
+	return 0;
 }
