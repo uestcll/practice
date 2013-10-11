@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
 class WordFrequency
 {
 private:
@@ -22,6 +23,8 @@ public:
 	~WordFrequency();
 
 	bool startCounting();
+	void saveFrequencyToFile(ofstream &);
+	void loadFrequencyFromFile(ifstream &);
 
 	inline void reset()
 	{

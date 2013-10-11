@@ -71,3 +71,8 @@ void TreeItem::copyHFCode(vector<unsigned char>::iterator & begin,vector<unsigne
 {
 	hfCode.assign(begin,end);
 }
+
+string::size_type TreeItem::getSize()
+{
+	return hfCode.size();
+}

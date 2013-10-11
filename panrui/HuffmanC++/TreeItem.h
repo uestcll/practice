@@ -51,6 +51,7 @@ public:
 	
 	void setNextBit(const unsigned char next);
 	void reset();
+	string::size_type getSize();
 	const unsigned char getNextBit();
 	bool operator<(TreeItem &)const ;
 	void destroyHead(TreeItem *);

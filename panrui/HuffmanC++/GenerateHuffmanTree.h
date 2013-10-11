@@ -6,6 +6,7 @@
 #include "MapOfTree.h"
 #include "WordFrequency.h"
 
+
 class GenerateHuffmanTree
 {
 private:
@@ -32,7 +33,7 @@ public:
 	~GenerateHuffmanTree();
 	void GenerateStart(MapOfTree * &);
 	void GenerateStart(TreeItem * &);
-	WordFrequency * getWordFrequency();
+	void SaveWordFrequency(ofstream &);
 
 };
 

@@ -59,3 +59,8 @@ void GenerateHuffmanTree::genSingalItemCode(TreeItem * p_tree,TreeItem * m_tree,
 	m_tree->copyHFCode(begin,end);
 	m_tree->setNextBit(Next);	
 }
+
+void GenerateHuffmanTree::SaveWordFrequency(ofstream & str)
+{
+	m_wf->saveFrequencyToFile(str);
+}
