@@ -61,8 +61,8 @@ unsigned char decodeHuffman::getNextBitValue(ifstream &istr)
 
 void decodeHuffman::startDecode()
 {
-	ifstream istr(sourcePath,ios::binary);
-	ofstream ostr(destPath,ios::binary);
+	ifstream istr(sourcePath.c_str(),ios::binary);
+	ofstream ostr(destPath.c_str(),ios::binary);
 
 	getleftBitAndLen(istr);
 	findOriginalFileOffset(istr);

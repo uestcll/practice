@@ -75,7 +75,7 @@ void GenerateHuffmanTree::GenerateStart(TreeItem * & tree)
 {
 	initByWordFrequency();
 
-	ifstream istr(str,ios::binary);
+	ifstream istr(str.c_str(),ios::binary);
 	if(!istr.is_open())
 	{
 		cout<<"open file fail while rebuild tree"<<endl;

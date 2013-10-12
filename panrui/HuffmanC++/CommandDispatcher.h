@@ -3,18 +3,23 @@
 #include <string>
 #include <cstdarg>
 
+class CmdExecute;
+class CmdAnalysis;
 class CommandDispatcher
 {
 private:
 	CommandDispatcher(CommandDispatcher &);
 	const CommandDispatcher & operator = (const CommandDispatcher &);
-protected:
 	unsigned char	** cmd;
-	unsigned int	num;
-	virtual void paraAnalysis() = 0;
+	unsigned int	paraNum;
+	unsigned int 	analysisResult;
+	CmdExecute  *	doExecute;
+	CmdAnalysis *   doAnalysis;
 public:
-	CommandDispatcher(unsigned int num);
-	virtual ~CommandDispatcher();
-	virtual bool Dispatch() = 0;
+	CommandDispatcher(unsigned int paraNum,...);
+	~CommandDispatcher();
+
+	void startDispatch();
+	
 };
 #endif
