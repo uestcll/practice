@@ -1,4 +1,4 @@
-#include "CmdDispatchForHuffman.h"
+#include "CommandDispatcher.h"
 #define FOR_DEBUG
 int main(int argc,char*argv[])
 {
