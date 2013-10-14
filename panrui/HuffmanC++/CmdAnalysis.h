@@ -13,7 +13,7 @@ protected:
 
 public:
 	CmdAnalysis(unsigned int &retValue,unsigned char ** cmd,unsigned int paraNum);
-	~CmdAnalysis();
+	virtual ~CmdAnalysis();
 
 	virtual void startAnalysis() = 0;
 };

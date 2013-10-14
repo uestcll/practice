@@ -12,7 +12,7 @@ protected:
 	unsigned int paraNum;
 public:
 	CmdExecute(unsigned int &retValue,unsigned char ** cmd,unsigned int paraNum);
-	~CmdExecute();
+	virtual ~CmdExecute();
 
 	virtual void startExecute() = 0 ;
 };

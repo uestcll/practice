@@ -1,4 +1,5 @@
 #include "CommandDispatcher.h"
+#include "HuffmanExecute.h"
 #define FOR_DEBUG
 int main(int argc,char*argv[])
 {
@@ -10,9 +11,12 @@ int main(int argc,char*argv[])
 #endif
 
 #ifndef FOR_DEBUG
-	if(argc < 4)
+	if(argc<4)
+	{
+		HuffmanExecute::doUsage();
 		return 0;
-	CommandDispatcher  action(4,argv[0],argv[1],argv[2],argv[3]);
+	}
+	CommandDispatcher  action(argc,argv[0],argv[1],argv[2],argv[3]);
 	action.startDispatch();
 #endif
 
