@@ -4,7 +4,7 @@
 class CmdExecute
 {
 private:
-	CmdExecute(CmdExecute &);
+	CmdExecute(const CmdExecute &);
 	const CmdExecute & operator = (const CmdExecute &);
 protected:
 	unsigned int &retValue;
