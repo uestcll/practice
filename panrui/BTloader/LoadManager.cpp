@@ -14,9 +14,10 @@ void mainLogic(char * path)
 
 	fclose(fd);
 	query(info);
+	deleteBTfile(info);
 }
 
-void loadFile(FILE *fd,dictionary * info)
+void loadFile(FILE *fd,dictionary *& info)
 {
 	fgetc(fd);
 	initDictionary(fd,info);
@@ -25,4 +26,9 @@ void loadFile(FILE *fd,dictionary * info)
 void query(dictionary * &info)
 {
 	
+}
+
+void deleteBTfile(dictionary * info)
+{
+	deleteInfo(info);
 }

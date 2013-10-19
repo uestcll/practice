@@ -91,6 +91,68 @@ void initList(FILE *& fd,list *& pl)
 	}
 }
 
+void deleteInfo(dictionary * info)
+{
+	switch(info->firType)
+	{
+	case ITEM:
+		deleteItem(info->fir);
+		break;
+	case LIST:
+		deleteList(info->firl);
+		break;
+	case DICTIONARY:
+		deleteInfo(info->fird);
+		break;
+	default:
+		printf("deleting error\n");
+	}
+	switch(info->secType)
+	{
+	case ITEM:
+		deleteItem(info->sec);
+		break;
+	case LIST:
+		deleteList(info->secl);
+		break;
+	case DICTIONARY:
+		deleteInfo(info->secd);
+		break;
+	default:
+		printf("deleting error\n");
+	}
+	if(info->next!=NULL)
+		deleteInfo(info->next);
+	delete info;
+}
+
+void deleteList(list * pl)
+{
+	switch(pl->dataType)
+	{
+	case ITEM:
+		deleteItem(pl->pitem);
+		break;
+	case LIST:
+		deleteList(pl->plist);
+		break;
+	case DICTIONARY:
+		deleteInfo(pl->pdic);
+		break;
+	default:
+		printf("deleting error\n");
+	}
+	if(pl->next!=NULL)
+		deleteList(pl->next);
+	delete pl;
+}
+
+void deleteItem(item * pi)
+{
+	delete pi->data;
+	delete pi;
+}
+
 unsigned long getInterger(FILE *&fd)
 {
 	unsigned long retValue = 0;

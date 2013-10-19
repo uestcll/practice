@@ -10,6 +10,8 @@ void initString(FILE *& fd,item *& pi);
 void initList(FILE *& fd,list *& pl);
 
 void deleteInfo(dictionary * info);
+void deleteList(list * pl);
+void deleteItem(item * pi);
 
 void find(char * aim,dictionary * info);
 unsigned long getInterger(FILE *& fd);
