@@ -2,6 +2,7 @@
 #define _ITEM_BASE_
 #include "ReadCtrler.h"
 
+#include <iostream>
 
 class ItemBase
 {

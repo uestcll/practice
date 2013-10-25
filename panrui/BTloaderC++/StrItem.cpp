@@ -4,7 +4,7 @@
 
 StrItem::StrItem():len(0)
 {}
-StrItem::~StrItem(){};
+StrItem::~StrItem(){std::cout<<"end of str\n";};
 void StrItem::init()
 {
 	ReadCtrler * reader = ReadCtrler::GetInstence();

@@ -3,7 +3,7 @@
 #include "ReadCtrler.h"
 
 ListItem::ListItem(){}
-ListItem::~ListItem(){}
+ListItem::~ListItem(){ std::cout<<"end of list\n";}
 
 void ListItem::init()
 {
@@ -12,6 +12,7 @@ void ListItem::init()
 	ReadCtrler * reader = ReadCtrler::GetInstence();
 	if(!reader->tryEnd())
 	{
-		this->Next.reset(GetNewItem::getNewItem());
+		this->Next.reset(new ListItem);
+		this->Next->init();
 	}	
 }

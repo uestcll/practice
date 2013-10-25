@@ -2,7 +2,7 @@
 #include "GetNewItem.h"
 #include "ReadCtrler.h"
 DicItem::DicItem(){}
-DicItem::~DicItem(){}
+DicItem::~DicItem(){std::cout<<"end of dic\n";}
 
 void DicItem::init()
 {
@@ -13,6 +13,7 @@ void DicItem::init()
 	ReadCtrler * reader = ReadCtrler::GetInstence();
 	if(!reader->tryEnd())
 	{
-		this->Next.reset(GetNewItem::getNewItem());
+		this->Next.reset(new DicItem);
+		this->Next->init();
 	}
 }
