@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string>
 
+using namespace std;
+
 string transport = "udp";
 unsigned short portbase = 0;
 CLsocketByUdp::CLsocketByUdp():isInit(false)

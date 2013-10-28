@@ -79,8 +79,6 @@ int CLsocket::passivesocket(const string &port,const int qlen)
 
 	getSocket(addr,port);
 	try{
-		if(0 > bind(fd,(sockaddr *)&sin,sizeof(sin)))
-			throw "error happened while binding port";
 		if(startlisten(qlen))
 			throw "error happened while listening port";
 		return fd;
