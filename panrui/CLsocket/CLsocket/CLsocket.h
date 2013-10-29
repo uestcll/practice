@@ -23,8 +23,8 @@ public:
 
 	int connectsocket(const string & host,const string &port);
 	int passivesocket(const string &port,const int qlen);
-	virtual int send() = 0;
-	virtual int receive() = 0;
+	virtual int send(void * Buf,const int size) = 0;
+	virtual int receive(void * Buf) = 0;
 
 };
 

@@ -7,11 +7,15 @@ class CLsocketByTcpAccept:public CLsocketByTcp
 private:
 	sockaddr_in rmt_sin;
 	socklen_t 	rmt_addr_len;
+
+	static const int readLen = 1024;
 public:
 	int AcceptRequest();
 	CLsocketByTcpAccept();
 	CLsocketByTcpAccept(int fd);
 	virtual ~CLsocketByTcpAccept();
+	virtual int send(void * Buf,const int size);
+	virtual int receive(void * Buf);
 };
 
 #endif

@@ -54,12 +54,12 @@ bool CLsocketByTcp::startlisten(const int qlen )
 	return false ;
 }
 
-int CLsocketByTcp::send()
+int CLsocketByTcp::send(void * Buf,const int size)
 {
 	return 0;
 }
 
-int CLsocketByTcp::receive()
+int CLsocketByTcp::receive(void * Buf)
 {
 	return 0;
 }

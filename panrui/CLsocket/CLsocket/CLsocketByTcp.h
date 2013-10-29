@@ -19,8 +19,8 @@ public:
 	CLsocketByTcp(int fd);
 	virtual ~CLsocketByTcp();
 
-	virtual int send();
-	virtual int receive();
+	virtual int send(void * Buf,const int size);
+	virtual int receive(void * Buf);
 
 
 };
