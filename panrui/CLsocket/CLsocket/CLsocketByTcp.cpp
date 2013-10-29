@@ -53,3 +53,13 @@ bool CLsocketByTcp::startlisten(const int qlen )
 			return true ;
 	return false ;
 }
+
+int CLsocketByTcp::send()
+{
+	return 0;
+}
+
+int CLsocketByTcp::receive()
+{
+	return 0;
+}
