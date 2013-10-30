@@ -2,6 +2,9 @@
 
 #include <sys/types.h>
 #include <sys/socket.h> 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
 
 const int CLsocketByTcpAccept::readLen;
 
@@ -36,3 +39,19 @@ int CLsocketByTcpAccept::receive(void * Buf)
 	}
 	return cur;
 }
+
+string CLsocketByTcpAccept::getRemoteAddr()
+{
+	string ret = inet_ntoa(rmt_sin.sin_addr);
+	return ret;
+}
+
+string CLsocketByTcpAccept::getRemotePort()
+{
+	char tmp[6] = {0};
+	sprintf(tmp,"%d",rmt_sin.sin_port);
+	string ret = tmp;
+	return ret;
+}
+
+

@@ -16,6 +16,9 @@ public:
 	virtual ~CLsocketByTcpAccept();
 	virtual int send(void * Buf,const int size);
 	virtual int receive(void * Buf);
+	string getRemotePort();
+	string getRemoteAddr();
+
 };
 
 #endif
