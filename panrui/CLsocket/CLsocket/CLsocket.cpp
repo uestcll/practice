@@ -36,7 +36,7 @@ void CLsocket::getSocket(const string & host,const string & port)
 				sin.sin_addr.s_addr = INADDR_ANY;
 		else
 			if((phe = gethostbyname(host.c_str()))!=0)
-				memcpy(&sin.sin_addr,&phe->h_addr,phe->h_length);
+				memcpy(&sin.sin_addr,phe->h_addr,phe->h_length);
 			else if((sin.sin_addr.s_addr = inet_addr(host.c_str() )) == INADDR_NONE)
 				throw "error happened while setting ip";
 			
