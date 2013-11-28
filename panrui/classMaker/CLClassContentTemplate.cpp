@@ -85,11 +85,11 @@ ofstream& operator <<(ofstream & ostr,CLClassContentTemplate & cur_tc)
 		ostr<<cur_tc.IncludingFile<<endl;
 	list<memberVarStatic>::iterator itv = cur_tc.var_l.begin();
 	while(itv != cur_tc.var_l.end())
-		ostr<<*itv;
+		ostr<<*itv++;
 
 	list<memberFunctionContent>::iterator itf = cur_tc.func_l.begin();
 	while(itf != cur_tc.func_l.end())
-		ostr<<*itf;
+		ostr<<*itf++;
 	return ostr;
 }
 

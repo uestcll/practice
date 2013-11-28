@@ -130,6 +130,58 @@ ofstream & operator <<(ofstream &ostr,CLClassTemplate & cur_c)
 	return ostr;
 }
 
+ostream & operator <<(ostream &ostr,CLClassTemplate & cur_c) 
+{
+	ostr<<"className : "<<cur_c.className<<endl;
+
+	vector<memberFunction>::iterator it;
+	
+	it = cur_c.public_f.begin();
+	while(it != cur_c.public_f.end())
+	{
+		ostr<<"public:"<<it->typeName<<"\t"<<it->functionName<<"\t"<<it->paraName<<endl;
+		it++;
+	}
+
+	it = cur_c.protected_f.begin();
+	while(it != cur_c.protected_f.end())
+	{
+		ostr<<"protected:"<<it->typeName<<"\t"<<it->functionName<<"\t"<<it->paraName<<endl;
+		it++;
+	}
+
+	it = cur_c.private_f.begin();
+	while(it != cur_c.private_f.end())
+	{
+		ostr<<"private:"<<it->typeName<<"\t"<<it->functionName<<"\t"<<it->paraName<<endl;
+		it++;
+	}
+
+	vector<memberVariable>::iterator itv;
+	itv = cur_c.public_v.begin();
+	while(itv != cur_c.public_v.end())
+	{
+		ostr<<"public:"<<itv->typeName<<"\t"<<itv->VariableName<<endl;
+		itv++;
+	}
+
+	itv = cur_c.protected_v.begin();
+	while(itv != cur_c.protected_v.end())
+	{
+		ostr<<"protected:"<<itv->typeName<<"\t"<<itv->VariableName<<endl;
+		itv++;
+	}
+
+	itv = cur_c.private_v.begin();
+	while(itv != cur_c.private_v.end())
+	{
+		ostr<<"private:"<<itv->typeName<<"\t"<<itv->VariableName<<endl;
+		itv++;
+	}
+
+	return ostr;
+}
+
 void CLClassTemplate::writeToFile()
 {
 	string add = "./";

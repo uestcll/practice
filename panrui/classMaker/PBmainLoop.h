@@ -25,8 +25,10 @@ private:
 	const static int add_new_var = 0;
 	const static int add_new_fun = 1;
 	const static int write_to_file = 2;
-	const static int show_now = 3;
-	const static int show_usage = 4;
+	const static int edit_fun = 3;
+	const static int assign_value = 4;
+	const static int show_now = 5;
+	const static int show_usage = 6;
 protected:
 
 public:
@@ -47,6 +49,8 @@ public:
 	static void addFun();
 	static void writeTofile();
 	static void showNow();
+	static void editFun();
+	static void assignVal();
 
 };
 

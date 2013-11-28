@@ -49,6 +49,7 @@ public:
 	void addItem(string superclassName);
 	void writeToFile();
 	friend ofstream& operator << (ofstream & str ,CLClassTemplate& cur_c);
+	friend ostream& operator << (ostream & str, CLClassTemplate& cur_c);
 
 	memberFunction *findFunc(string funcName);
 	memberVariable *findVar(string varName);
