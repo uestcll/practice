@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include "ClassTemplate.h"
+#include "CLClassTemplate.h"
+
+
 #include <map>
 
 using namespace std;
@@ -32,13 +34,14 @@ public:
 	~PBmainLoop();
 	void mainloop();
 };
-
+class CLClassContentTemplate;
 class PBtool
 {
 private:
 	static bool isSingle;
 public:
-	static ClassTemplate * m_cla;
+	static CLClassTemplate * m_cla;
+	static CLClassContentTemplate * m_cla_content;
 	static void init(string className,bool defaultInit);
 	static void addVar();
 	static void addFun();

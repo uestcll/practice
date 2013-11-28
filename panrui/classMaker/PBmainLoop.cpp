@@ -1,9 +1,12 @@
 #include "PBmainLoop.h"
-//const int PBmainLoop::add_new_var;
-//const int PBmainLoop::add_new_fun;
-//const int PBmainLoop::write_to_file;
-//const int PBmainLoop::show_now;
-//const int PBmainLoop::show_usage;
+#include "CLClassContentTemplate.h"
+#ifdef _LINUX_PROC_
+const int PBmainLoop::add_new_var;
+const int PBmainLoop::add_new_fun;
+const int PBmainLoop::write_to_file;
+const int PBmainLoop::show_now;
+const int PBmainLoop::show_usage;
+#endif
 
 PBmainLoop::PBmainLoop()
 {
@@ -71,7 +74,7 @@ void PBtool::addFun()
 	string functionName;
 	string paraName;
 	cout<<"access:";
-	cin>>access;
+	getline(cin,access,'\n');
 	cout<<"typeName:";
 	cin>>typeName;
 	cout<<"functionName:";
@@ -80,6 +83,8 @@ void PBtool::addFun()
 	cin.sync();
 	getline(cin,paraName,'\n');
 	m_cla->addItem(access,typeName,functionName,paraName);
+
+
 }
 
 void PBtool::addVar()
@@ -88,7 +93,7 @@ void PBtool::addVar()
 	string typeName;
 	string VariableName;
 	cout<<"access:";
-	cin>>access;
+	getline(cin,access,'\n');
 	cout<<"typeName:";
 	cin>>typeName;
 	cout<<"VariableName:";
@@ -96,11 +101,13 @@ void PBtool::addVar()
 	m_cla->addItem(access,typeName,VariableName);
 }
 bool PBtool::isSingle = 1;
-ClassTemplate * PBtool::m_cla = NULL;
+CLClassTemplate * PBtool::m_cla = NULL;
+CLClassContentTemplate * PBtool::m_cla_content = NULL;
 void PBtool::init(string className,bool DefaultInit)
 {
 	if(PBtool::isSingle)
-	PBtool::m_cla = new ClassTemplate(className,DefaultInit);
+	PBtool::m_cla = new CLClassTemplate(className,DefaultInit);
+	PBtool::m_cla_content = new CLClassContentTemplate(m_cla);
 	isSingle = false;	
 }
 void PBtool::showNow()
@@ -110,5 +117,7 @@ void PBtool::showNow()
 void PBtool::writeTofile()
 {
 	m_cla->writeToFile();
+	m_cla_content->writeCPPtoDisk();
 	delete m_cla;
+	delete m_cla_content;
 }

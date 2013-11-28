@@ -22,9 +22,10 @@ struct memberVariable
 	friend ofstream& operator << (ofstream& ostr,memberVariable& cur_v);
 };
 
-class ClassTemplate
+class CLClassTemplate
 {
 private:
+	friend class CLClassContentTemplate;
 	string className;
     vector<memberFunction> public_f;
 	vector<memberFunction> private_f;
@@ -38,15 +39,19 @@ private:
 
 	void writeSingleTeamTofile(ofstream &ostr,vector<memberFunction> & cur_f,vector<memberVariable> & cur_v,string teamName);
 	string initDef(string &);
-	const ClassTemplate& operator = (const ClassTemplate &);
-	ClassTemplate(const ClassTemplate &);
+	const CLClassTemplate& operator = (const CLClassTemplate &);
+	CLClassTemplate(const CLClassTemplate &);
 public:
-	ClassTemplate(string className,bool isNoConstructer);
-	~ClassTemplate();
+	CLClassTemplate(string className,bool isNoConstructer);
+	~CLClassTemplate();
 	void addItem(string access,string typeName,string functionName,string paraName);
 	void addItem(string access,string typeName,string VariableName);
+	void addItem(string superclassName);
 	void writeToFile();
-	friend ofstream& operator << (ofstream & str ,ClassTemplate& cur_c);
+	friend ofstream& operator << (ofstream & str ,CLClassTemplate& cur_c);
+
+	memberFunction *findFunc(string funcName);
+	memberVariable *findVar(string varName);
 };
 
 #endif
