@@ -10,7 +10,8 @@ public:
 	virtual string writeSerialier();
 	virtual string writeDeserializer();
 private:
-
+	CLMsgElement * p_value;
+	
 };
 
 #endif

@@ -10,6 +10,7 @@ public:
 	virtual string writeSerialier();
 	virtual string writeDeserializer();
 private:
+	void getNextItem(string tmp,string &out,bool if_reset);
 };
 
 #endif

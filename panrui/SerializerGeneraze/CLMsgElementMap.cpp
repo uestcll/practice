@@ -73,7 +73,6 @@ void CLMsgElementMap::registMap()
 	f_map["int"] = initBasic;
 	f_map["short"] = initBasic;
 	f_map["long"] = initBasic;
-	f_map["int"] = initBasic;
 	f_map["char"] = initBasic;
 	f_map["float"] = initBasic;
 	f_map["double"] = initBasic;
