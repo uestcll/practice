@@ -1,6 +1,7 @@
 #include "CLMsgClassLoader.h"
 #include "CLMsgClassManager.h"
 #include "CLMsgClass.h"
+#include "CLMsgElementMap.h"
 
 #include "CLBasicType.h"
 #include "CLPointerType.h"
@@ -10,9 +11,6 @@
 #include <fstream>
 namespace filedeal
 {
-	using namespace KEY_WORD_DEF;
-	using namespace VAR_TYPE_DEF;
-
 	void getNextObj(ifstream & istr,string &ret)
 	{
 		ret = "";
@@ -51,46 +49,6 @@ namespace filedeal
 		
 	}
 
-	bool judgeKeyWordType(string &tmp,int &type)
-	{
-	/*初版，使用一些奇怪的方法；*/
-		if(tmp.find("(")!=string::npos)
-			return false;
-		for(int i = 0;i<type_num;i++)
-			if(tmp.find(t_map.type_name[i])!=string::npos)
-			{
-				type = t_map.type_code[i];
-				return true ;
-			}
-	}
-	bool classSentence(ifstream & istr,CLMsgClass * t_class,string &tmp)
-	{
-		int		type;
-		string	line;
-		getline(istr,line,'\n');
-		tmp += line;
-		if(judgeKeyWordType(tmp,type))
-		{
-			switch(type)
-			{
-			case BASIC_TYPE:
-				t_class->addMemberVar(new CLBasicType)->newVarDefinitionSentence(tmp);
-				break;
-			case POINT_TYPE:
-				t_class->addMemberVar(new CLPointerType)->newVarDefinitionSentence(tmp);
-				break;
-			case STRING_TYPE:
-				t_class->addMemberVar(new CLStringType)->newVarDefinitionSentence(tmp);
-				break;
-			case USER_TYPE:
-				t_class->addMemberVar(new CLUserType)->newVarDefinitionSentence(tmp);
-				break;
-			default:
-				return;
-			}
-		}
-	}
-
 	bool classJudge(ifstream & istr,string & classname,bool & is_needSerial,bool & is_struct)
 	{
 		string tmp;
@@ -116,6 +74,14 @@ namespace filedeal
 		istr.seekg(-1,ios::cur);
 		return true;
 	}
+	bool sentenceJudge(string &in)
+	{
+		if(in.find("(")!= string::npos)
+			return true;
+		else
+			return false;
+	}
+
 	void classContent(ifstream & istr,CLMsgClass * t_class)
 	{
 		string tmp;
@@ -126,17 +92,24 @@ namespace filedeal
 			t_class->addSuperClass(tmp);
 			getNextObj(istr,tmp);
 		}
-		getNextObj(istr,tmp);
+		istr.sync();
+		getline(istr,tmp,'\n');
 		while(tmp != "}")
 		{
 			if(tmp == KEY_WORD_PUBLIC||tmp == KEY_WORD_PRIVATE||tmp == KEY_WORD_PROTECTED)
-				getNextObj(istr,tmp);
+			{
+				istr.sync();
+				getline(istr,tmp,'\n');
+			}
 			else
-				classSentence(istr,t_class,tmp);
-			getNextObj(istr,tmp);
+			{
+				t_class->addMemberVar(CLMsgElementMap::getInstance()->initNewElement(tmp))->newVarDefinitionSentence(tmp);
+			}
+			istr.sync();
+			getline(istr,tmp,'\n');
 		}
-		
 	}
+
 }
 
 

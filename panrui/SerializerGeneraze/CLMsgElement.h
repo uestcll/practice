@@ -14,8 +14,8 @@ public:
 	virtual void newVarDefinitionSentence(string &sentence) = 0;
 	virtual string writeSerialier() = 0;
 	virtual string writeDeserializer() = 0;
-	bool type;
 protected:
+	int type_len;
 private:
 	CLMsgElement(const CLMsgElement &);
 	const CLMsgElement & operator = (const CLMsgElement &);

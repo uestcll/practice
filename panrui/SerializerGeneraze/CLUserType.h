@@ -10,7 +10,7 @@ public:
 	virtual string writeSerialier();
 	virtual string writeDeserializer();
 private:
-
+	int type_len;
 };
 
 #endif
