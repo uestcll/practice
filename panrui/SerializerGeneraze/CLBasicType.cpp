@@ -1,5 +1,5 @@
 #include "CLBasicType.h"
-#include "CLMsgClassLoader.cpp"
+#include "CLMsgClassLoader.h"
 
 using namespace filedeal;
 CLBasicType::CLBasicType()
@@ -15,7 +15,7 @@ void CLBasicType::newVarDefinitionSentence(string &sentence)
 {
 	string type;
 	getNextItem(sentence,type,true);
-	while((type.find("const")!=string::npos)||(type.find("static")!=string::npos)||(type.find("*")!=string::npos)||(type.find("unsigned")!=string::npos)(type.find("signed")!=string::npos))
+	while((type.find("const",0)!=string::npos)||(type.find("static",0)!=string::npos)||(type.find("*",0)!=string::npos)||(type.find("unsigned",0)!=string::npos)||(type.find("signed",0)!=string::npos))
 	{
 		getNextItem(sentence,type,false);
 	}	
@@ -31,25 +31,48 @@ void CLBasicType::newVarDefinitionSentence(string &sentence)
 		return ;
 }
 
-void CLBasicType::getNextItem(string tmp,string &out,bool if_reset)
+void CLBasicType::getNextItem(string &tmp,string &out,bool if_reset)
 {
 	static string::iterator it;
 	if(if_reset)
 		it = tmp.begin();
 	while( it != tmp.end())
 	{
-		if(*it == ' ')
+		if(*it == ' '||*it == '\t'||*it == ';')
 		{
 			if(out == "")
+			{
+				it++;
 				continue;
-			else
+			}
+			else{
+				it++;
 				break;
+			}
 		}
 		if(*it == '*')
 		{
-			out.push_back(*it);
-			break;
+			if(out == "")
+			{
+				out.push_back(*it);
+				it++;
+				break;
+			}
+			else
+			{
+				break;
+			}
 		}
 		out.push_back(*it);
+		it++;
 	}
+}
+
+string CLBasicType::writeDeserializer(){
+	return NULL;
+}
+
+string CLBasicType::writeSerialier()
+{
+	return NULL;
 }

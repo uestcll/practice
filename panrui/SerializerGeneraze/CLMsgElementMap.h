@@ -18,7 +18,7 @@ private:
 	CLMsgElementMap(CLMsgElementMap &);
 	
 	map<string ,CLMsgElement * (*)()>  f_map;
-	void getNextItem(string tmp,string &out,bool if_reset);
+	void getNextItem(string &tmp,string &out,bool if_reset);
 	
 private:
 	static CLMsgElement * initBasic();

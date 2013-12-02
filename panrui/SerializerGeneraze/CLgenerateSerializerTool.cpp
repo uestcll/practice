@@ -11,13 +11,18 @@ using namespace std;
 CLgenerateSerializerTool::CLgenerateSerializerTool(string workspace):m_workspace(workspace),
 m_msgClassMng(NULL),m_serializerProducer(NULL),m_deserializerProducer(NULL),strNum(0)
 {
+	
 	if(m_workspace == "")
 #ifdef _WINDOWS_PROC_
-		m_workspace = ".";
-		m_workspace += "\\*.*";
+		m_workspace = ".\\";
+		originPath = m_workspace;
+		m_workspace += "*.h";
+
 #endif
 #ifdef _LINUX_PROC_
 		m_workspace = "./";
+
+
 #endif
 
 }
@@ -60,18 +65,19 @@ void CLgenerateSerializerTool::getFileList()
 	strNum++;
 	}while(FindNextFile(hFind,&fdFileData)!= 0);
 
-	m_filelist = new string[strNum-2];
+	m_filelist = new string[strNum];
+	for(int i = 0;i<strNum;i++)
+		m_filelist[i] = originPath;
 	strNum = 0;
 
 	hFind = FindFirstFile(m_workspace.c_str(),&fdFileData);
-	FindNextFile(hFind,&fdFileData);
-	FindNextFile(hFind,&fdFileData);
 	if(hFind == INVALID_HANDLE_VALUE )
 	{
 		strNum = 0;
 		return;
 	}else do{
-		m_filelist[strNum] = fdFileData.cFileName;
+		m_filelist[strNum] += fdFileData.cFileName;
+		m_filelist[strNum];
 		strNum++;
 	}while(FindNextFile(hFind,&fdFileData)!= 0);
 

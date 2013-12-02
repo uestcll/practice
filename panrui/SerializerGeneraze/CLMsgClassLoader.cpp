@@ -2,6 +2,7 @@
 #include "CLMsgClassManager.h"
 #include "CLMsgClass.h"
 #include "CLMsgElementMap.h"
+#include "CLgenerateSerializerTool.h"
 
 #include "CLBasicType.h"
 #include "CLPointerType.h"
@@ -9,6 +10,8 @@
 #include "CLUserType.h"
 
 #include <fstream>
+
+#define MAX_SIZE 1024
 namespace filedeal
 {
 	void getNextObj(ifstream & istr,string &ret)
@@ -17,9 +20,14 @@ namespace filedeal
 		char tmp;
 
 		while(tmp = istr.get())
-			if(tmp == ' '||tmp =='\n')
+			if(tmp == ' '||tmp =='\n'||tmp == 0x0d)
+			{
+				if(ret == "")
 				continue;
-			else if((tmp<='9'&&tmp>='0')||(tmp<='z'&&tmp>='a')||(tmp<='Z'&&tmp>='A'))
+				else
+				break;
+			}
+			else if((tmp<='9'&&tmp>='0')||(tmp<='z'&&tmp>='a')||(tmp<='Z'&&tmp>='A')||tmp =='_')
 			{
 				ret.push_back(tmp);
 				continue;
@@ -74,9 +82,9 @@ namespace filedeal
 		istr.seekg(-1,ios::cur);
 		return true;
 	}
-	bool sentenceJudge(string &in)
+	bool sentenceAndStaticJudge(string &in)
 	{
-		if(in.find("(")!= string::npos)
+		if(in.find("(")!= string::npos||in.find("static")!= string::npos)
 			return true;
 		else
 			return false;
@@ -84,7 +92,9 @@ namespace filedeal
 
 	void classContent(ifstream & istr,CLMsgClass * t_class)
 	{
-		string tmp;
+
+		string	tmp;
+		char	input[1024] = {0};
 		getNextObj(istr,tmp);
 		if(tmp == ":")
 		{
@@ -92,21 +102,44 @@ namespace filedeal
 			t_class->addSuperClass(tmp);
 			getNextObj(istr,tmp);
 		}
-		istr.sync();
-		getline(istr,tmp,'\n');
-		while(tmp != "}")
+//		istr.sync();
+//		getline(istr,tmp,'\n');
+#ifdef  _WINDOWS_PROC_
+		istr.getline(input,MAX_SIZE,0x0d);
+		istr.get();
+#endif
+
+#ifdef _LINUX_PROC_
+		istr.getline(input,MAX_SIZE,'\n');
+#endif
+		tmp = input;
+		while(tmp != "};")
 		{
-			if(tmp == KEY_WORD_PUBLIC||tmp == KEY_WORD_PRIVATE||tmp == KEY_WORD_PROTECTED)
+			
+			if(tmp == KEY_WORD_PUBLIC||tmp == KEY_WORD_PRIVATE||tmp == KEY_WORD_PROTECTED||tmp == ""||tmp[0] == 0x0d)
 			{
-				istr.sync();
-				getline(istr,tmp,'\n');
+
+			}
+			else if(sentenceAndStaticJudge(tmp))
+			{
+			
 			}
 			else
 			{
 				t_class->addMemberVar(CLMsgElementMap::getInstance()->initNewElement(tmp))->newVarDefinitionSentence(tmp);
 			}
-			istr.sync();
-			getline(istr,tmp,'\n');
+//			istr.sync();
+//			getline(istr,tmp,'\n');
+			memset(input,0,MAX_SIZE);
+#ifdef  _WINDOWS_PROC_
+		istr.getline(input,MAX_SIZE,0x0d);
+		istr.get();
+#endif
+
+#ifdef _LINUX_PROC_
+		istr.getline(input,MAX_SIZE,'\n');
+#endif
+			tmp = input;
 		}
 	}
 
@@ -122,6 +155,7 @@ m_filename(filename),m_strNum(strNum)
 	loadFileFromDisk();
 }
 
+CLMsgClassLoader::~CLMsgClassLoader(){}
 void CLMsgClassLoader::loadFileFromDisk()
 {
 	for(int i = 0;i<m_strNum;i++)
@@ -134,7 +168,7 @@ void CLMsgClassLoader::loadSingleFile(string & filename)
 {
 	ifstream istr(filename.c_str(),ios::binary);
 	string	classname;
-	bool	is_needSerial;
+	bool	is_needSerial = false;
 	bool	is_struct = false;
 	
 	while(istr.peek()!= EOF)

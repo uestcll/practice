@@ -29,6 +29,7 @@ private:
 	string *m_filelist;
 	int		strNum;
 	string	m_workspace;
+	string	originPath;
 
 	CLMsgClassManager	   *m_msgClassMng;
 	CLSerializerProducer   *m_serializerProducer;

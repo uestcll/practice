@@ -21,6 +21,8 @@ void CLPointerType::newVarDefinitionSentence(string &sentence)
 	p_value->newVarDefinitionSentence(tmp);
 }
 
+string CLPointerType::writeDeserializer(){	return NULL;}
 
+string CLPointerType::writeSerialier(){	return NULL;}
 
 

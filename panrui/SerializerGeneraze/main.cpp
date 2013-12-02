@@ -2,6 +2,6 @@
 
 int main()
 {
-	CLgenerateSerializerTool gsTool("D:\\PanRui\\code\\2012_code");
+	CLgenerateSerializerTool gsTool("D:\\test\\");
 	gsTool.startInitSerializerAndDeserializer();
 }

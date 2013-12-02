@@ -16,7 +16,7 @@ namespace filedeal
 void getNextObj(ifstream & istr,string &ret);
 void getNextObj(string & in,string &ret);
 bool classJudge(ifstream & istr,string & classname,bool & is_needSerial,bool & is_struct);
-bool sentenceJudge(string &in);
+bool sentenceAndStaticJudge(string &in);
 void classContent(ifstream & istr,CLMsgClass * t_class);
 }
 
