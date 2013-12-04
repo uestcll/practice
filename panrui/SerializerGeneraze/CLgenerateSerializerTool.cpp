@@ -1,4 +1,6 @@
 #include "CLgenerateSerializerTool.h"
+#include "CLDeserializerProducer.h"
+#include "CLSerializerProducer.h"
 #ifdef _WINDOWS_PROC_
 #include <Windows.h>
 #endif
@@ -9,7 +11,7 @@
 
 using namespace std;
 CLgenerateSerializerTool::CLgenerateSerializerTool(string workspace):m_workspace(workspace),
-m_msgClassMng(NULL),m_serializerProducer(NULL),m_deserializerProducer(NULL),strNum(0)
+m_msgClassMng(NULL),strNum(0)
 {
 	
 	if(m_workspace == "")
@@ -33,10 +35,6 @@ CLgenerateSerializerTool::~CLgenerateSerializerTool()
 		delete []m_filelist;
 	if(m_msgClassMng!=NULL)
 		delete m_msgClassMng;
-	if(m_serializerProducer!=NULL)
-		delete m_serializerProducer;
-	if(m_serializerProducer!=NULL)
-		delete m_deserializerProducer;
 }
 
 void CLgenerateSerializerTool::startInitSerializerAndDeserializer()
@@ -109,5 +107,18 @@ void CLgenerateSerializerTool::initCLCompleteInfo()
 	
 
 }
-void CLgenerateSerializerTool::initDeserializer(){}
-void CLgenerateSerializerTool::initSerializer(){}
+void CLgenerateSerializerTool::initDeserializer()
+{
+	list<string>::iterator it = m_msgClassMng->serialingNameMapBegin();
+	CLSerializerProducer * newSerializer;
+	while(it != m_msgClassMng->serialingNameMapEnd())
+	{
+		newSerializer = new CLSerializerProducer(m_msgClassMng,*it);
+		newSerializer->buildSerializer();
+		delete newSerializer;
+	}
+}
+void CLgenerateSerializerTool::initSerializer()
+{
+
+}

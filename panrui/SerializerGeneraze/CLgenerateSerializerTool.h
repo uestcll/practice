@@ -5,8 +5,6 @@
 #include <string>
 
 #include "CLMsgClassManager.h"
-#include "CLDeserializerProducer.h"
-#include "CLSerializerProducer.h"
 
 class CLgenerateSerializerTool
 {
@@ -32,8 +30,6 @@ private:
 	string	originPath;
 
 	CLMsgClassManager	   *m_msgClassMng;
-	CLSerializerProducer   *m_serializerProducer;
-	CLDeserializerProducer *m_deserializerProducer;
 };
 
 #endif

@@ -27,6 +27,7 @@ class CLClassTemplate
 private:
 	friend class CLClassContentTemplate;
 	string className;
+	string beforeClass;
     vector<memberFunction> public_f;
 	vector<memberFunction> private_f;
 	vector<memberFunction> protected_f;
@@ -44,10 +45,16 @@ private:
 public:
 	CLClassTemplate(string className,bool isNoConstructer);
 	~CLClassTemplate();
+	
 	void addItem(string access,string typeName,string functionName,string paraName);
 	void addItem(string access,string typeName,string VariableName);
 	void addItem(string superclassName);
+	
+	void addIncludingFile(string & i_file);
+	void addNameSpace(string & i_namespace);
+	
 	void writeToFile();
+	
 	friend ofstream& operator << (ofstream & str ,CLClassTemplate& cur_c);
 	friend ostream& operator << (ostream & str, CLClassTemplate& cur_c);
 

@@ -59,4 +59,7 @@ void CLUserType::getNextItem(string &tmp,string &out,bool if_reset)
 
 string CLUserType::writeDeserializer(){	return NULL;}
 
-string CLUserType::writeSerialier(){	return NULL;}
+string CLUserType::writeSerialier()
+{
+	
+}

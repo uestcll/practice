@@ -9,6 +9,7 @@ public:
 	virtual void newVarDefinitionSentence(string &sentence);
 	virtual string writeSerialier();
 	virtual string writeDeserializer();
+	virtual string getValueLen();
 private:
 	void getNextItem(string &tmp,string &out,bool if_reset);
 };

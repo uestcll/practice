@@ -15,7 +15,7 @@ CLMsgClass* CLMsgClassManager::classRegister(string classname,bool is_needserial
 	if(is_needserial)
 		serialingNameMap.push_back(string(classname));
 
-	classMap[classname].reset(new CLMsgClass(is_struct));
+	classMap[classname].reset(new CLMsgClass(is_struct,this));
 	return classMap[classname].get();
 }
 

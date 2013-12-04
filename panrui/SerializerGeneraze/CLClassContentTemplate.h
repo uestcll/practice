@@ -48,6 +48,9 @@ public:
 	CLClassContentTemplate(CLClassTemplate * classHeader);
 	~CLClassContentTemplate();
 	void writeCPPtoDisk();
+	
+	void addIncludingFile(string & i_include);
+
 	memberFunctionContent * addNewFunction(string functionName);
 	memberVarStatic * addNewVarStatic(string varName);
 	friend ofstream& operator <<(ofstream & ostr,CLClassContentTemplate & cur_tc);

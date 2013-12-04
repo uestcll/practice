@@ -93,4 +93,10 @@ ofstream& operator <<(ofstream & ostr,CLClassContentTemplate & cur_tc)
 	return ostr;
 }
 
+void CLClassContentTemplate::addIncludingFile(string & i_include)
+{
+	IncludingFile+=i_include;
+	IncludingFile.push_back('\n');
+}
+
 

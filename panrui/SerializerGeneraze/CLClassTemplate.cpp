@@ -111,6 +111,9 @@ ofstream & operator <<(ofstream &ostr,CLClassTemplate & cur_c)
 {
 	string def = cur_c.initDef(cur_c.className);
 	ostr<<"#ifndef "<<def<<endl<<"#define "<<def<<endl<<endl;
+	if(cur_c.beforeClass != "");
+		ostr<<cur_c.beforeClass<<endl;
+
 	ostr<<endl<<endl<<cur_c.className;
 	if(cur_c.relations.size() != 0)
 	{
@@ -234,4 +237,16 @@ memberVariable * CLClassTemplate::findVar(string varName)
 			return &(*itpro);
 		else itpro++;
 	return NULL;
+}
+
+void CLClassTemplate::addIncludingFile(string & i_file)
+{
+	beforeClass+=i_file;
+	beforeClass.push_back('\n');
+}
+
+void CLClassTemplate::addNameSpace(string & i_namespace )
+{
+	beforeClass+=i_namespace;
+	beforeClass.push_back('\n');
 }

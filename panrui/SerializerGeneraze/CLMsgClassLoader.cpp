@@ -122,7 +122,8 @@ namespace filedeal
 			}
 			else if(sentenceAndStaticJudge(tmp))
 			{
-			
+				if(tmp.find("virtual",0)!=string::npos)
+					t_class->setVirtualClass();
 			}
 			else
 			{
