@@ -61,8 +61,11 @@ namespace filedeal
 	{
 		string tmp;
 		getNextObj(istr,tmp);
-		while((tmp!=STRUCT_FLAG&&tmp!=CLASS_FLAG)&&tmp!= CLMsgClassLoader::serialFlag)
+		while((tmp!=STRUCT_FLAG&&tmp!=CLASS_FLAG)&&tmp!= CLMsgClassLoader::serialFlag&&istr.peek() != EOF)
 			getNextObj(istr,tmp);
+
+		if(istr.peek() == EOF)
+			return false;
 
 		
 		if(tmp == CLMsgClassLoader::serialFlag)
@@ -181,6 +184,7 @@ void CLMsgClassLoader::loadSingleFile(string & filename)
 		{
 			CLMsgClass * t_class = m_msgClassMng->classRegister(classname,is_needSerial,is_struct);
 			classContent(istr,t_class);
+			is_needSerial = false;
 		}
 	}
 	

@@ -34,6 +34,7 @@ void CLBasicType::newVarDefinitionSentence(string &sentence)
 void CLBasicType::getNextItem(string &tmp,string &out,bool if_reset)
 {
 	static string::iterator it;
+	out = "";
 	if(if_reset)
 		it = tmp.begin();
 	while( it != tmp.end())

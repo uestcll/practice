@@ -37,7 +37,7 @@ void CLSerializerProducer::buildSerializer()
 	completeConAndDecon();
 	completeGetBuffer();
 	completeAllocateBuffer();
-	completeConAndDecon();
+	completeSerialInfo();
 
 	cla->writeToFile();
 	cla_content->writeCPPtoDisk();
@@ -122,12 +122,12 @@ void CLSerializerProducer::completeAllocateBuffer()
 				char size_char[32] = {0};
 				sprintf(size_char,"%d",cur_size);
 				string size_str = size_char;
-				fa->insertSentence("m_buf_len += "+size_str);
+				fa->insertSentence("m_buf_len += "+size_str+";");
 				cur_size = 0;
 			}
 			fa->insertSentence("m_buf_len += "+tmp+";");
 		}
-
+		it++;
 	}
 	if(cur_size != 0)
 	{
@@ -146,6 +146,7 @@ void CLSerializerProducer::completeSerialInfo()
 	{
 		fs->insertSentence((it->get())->writeSerialier());
 		fs->insertSentence("m_buf_pos += "+(it->get())->getValueLen()+";");
+		it++;
 
 	}
 }

@@ -22,6 +22,7 @@ void CLUserType::newVarDefinitionSentence(string &sentence)
 void CLUserType::getNextItem(string &tmp,string &out,bool if_reset)
 {
 	static string::iterator it;
+	out = "";
 	if(if_reset)
 		it = tmp.begin();
 	while( it != tmp.end())
@@ -61,5 +62,10 @@ string CLUserType::writeDeserializer(){	return NULL;}
 
 string CLUserType::writeSerialier()
 {
-	
+	return NULL;
+}
+
+string CLUserType::getValueLen()
+{
+	return NULL;
 }

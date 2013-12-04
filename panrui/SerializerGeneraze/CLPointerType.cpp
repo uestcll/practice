@@ -30,12 +30,12 @@ string CLPointerType::writeSerialier()
 	{
 		p_value->setOff(this->m_off);
 		string tmp = p_value->writeSerialier();
-		tmp.erase(tmp.find_last_of('&',0),1);
+		tmp.erase(tmp.find_last_of("&"),1);
 		return tmp;
 	}
 	else
 	{
-		
+		return NULL;
 	}
 }
 
@@ -49,9 +49,9 @@ string CLPointerType::getValueLen()
 	
 		string tmp = this->p_value->getValueLen();
 	
-		if(tmp == "0")
+		if(tmp == "1")
 			return "strlen((char *)m_char_cla["+m_off_str+"])";
-		else if(tmp[0]<='9'&&tmp[9]>='0')
+		else if(tmp[0]<='9'&&tmp[0]>='0')
 			return this->p_value->getValueLen();	
 		else
 			tmp.erase(tmp.find_last_of('&',0),1);
@@ -59,7 +59,7 @@ string CLPointerType::getValueLen()
 	}
 	else
 	{
-		
+		return NULL;
 	}
 }
 

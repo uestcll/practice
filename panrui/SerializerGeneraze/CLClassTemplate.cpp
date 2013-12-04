@@ -211,7 +211,7 @@ memberFunction * CLClassTemplate::findFunc(string funcName)
 	while(itpri != private_f.end())
 		if(funcName == itpri->functionName)
 			return &(*itpri);
-		else itpub++;
+		else itpri++;
 	while(itpro != protected_f.end())
 		if(funcName == itpri->functionName)
 			return &(*itpro);
@@ -231,7 +231,7 @@ memberVariable * CLClassTemplate::findVar(string varName)
 	while(itpri != private_v.end())
 		if(varName == itpri->VariableName)
 			return &(*itpri);
-		else itpub++;
+		else itpri++;
 	while(itpro != protected_v.end())
 		if(varName == itpri->VariableName)
 			return &(*itpro);

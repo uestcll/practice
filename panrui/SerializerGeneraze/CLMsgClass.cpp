@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-CLMsgClass::CLMsgClass(bool is_struct = false,CLMsgClassManager * p_mng):m_isVirtualClass(false)
+CLMsgClass::CLMsgClass(bool is_struct = false,CLMsgClassManager * p_mng = NULL):m_isVirtualClass(false)
 	,m_isStruct(is_struct),m_superClass(""),m_pmng(p_mng)
 {}
 CLMsgClass::~CLMsgClass(){}
@@ -45,15 +45,16 @@ offset CLMsgClass::setOffset()
 	{
 		int type_len = (it->get())->getTypeLen();
 
-		if(cur_off.from_start/type_len)
+		if(cur_off.from_start%type_len)
 		{
 			cur_off.from_start = (cur_off.from_start/type_len + 1)*type_len;
 		}
 
 		(it->get())->setOff(cur_off.from_start);
 		cur_off.from_start += type_len;
-		if(cur_off.max_unit < type_len)
+		if(cur_off.max_unit < (unsigned long)type_len)
 			cur_off.max_unit = type_len;
+		it++;
 	}
 	if(cur_off.from_start%cur_off.max_unit)
 		cur_off.from_start = (cur_off.from_start/cur_off.max_unit + 1)*cur_off.max_unit;
