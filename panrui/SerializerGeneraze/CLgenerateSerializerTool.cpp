@@ -109,6 +109,15 @@ void CLgenerateSerializerTool::initCLCompleteInfo()
 }
 void CLgenerateSerializerTool::initDeserializer()
 {
+	list<string>::iterator it = m_msgClassMng->serialingNameMapBegin();
+	CLDeserializerProducer * newDeserializer;
+	while(it != m_msgClassMng->serialingNameMapEnd())
+	{
+		newDeserializer = new CLDeserializerProducer(m_msgClassMng,*it);
+		newDeserializer->buildDeserializer();
+		delete newDeserializer;
+		it++;
+	}
 }
 void CLgenerateSerializerTool::initSerializer()
 {

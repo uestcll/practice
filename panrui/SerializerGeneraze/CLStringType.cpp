@@ -15,7 +15,14 @@ void CLStringType::newVarDefinitionSentence(string &sentence)
 
 }
 
-string CLStringType::writeDeserializer(){	return NULL;}
+string CLStringType::writeDeserializer()
+{
+	char m_off_char[32] = {0};
+	sprintf(m_off_char,"%ld",this->m_off);
+	string m_off_str = m_off_char;
+
+	return "*((string *)&m_char_cla["+m_off_str+"]) = (char *)&m_cla_buf[m_buf_pos];\n\tm_buf_pos += ((string *)&m_char_cla["+m_off_str+"])->length();";
+}
 
 string CLStringType::writeSerialier()
 {

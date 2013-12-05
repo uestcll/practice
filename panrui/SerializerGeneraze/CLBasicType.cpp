@@ -70,7 +70,26 @@ void CLBasicType::getNextItem(string &tmp,string &out,bool if_reset)
 }
 
 string CLBasicType::writeDeserializer(){
-	return NULL;
+	string type;
+	if(type_len == 8)
+		type = "long long";
+	else if(type_len == 4)
+		type = "int";
+	else if(type_len == 2)
+		type = "short";
+	else
+		type = "char";
+
+	char m_off_char[32] = {0};
+	sprintf(m_off_char,"%ld",this->m_off);
+	string m_off_str = m_off_char;
+
+	char type_len_char[32] = {0};
+	sprintf(type_len_char,"%ld",this->type_len);	
+	string type_len_str =  type_len_char;
+
+	return "*(("+type+" *)&m_char_cla["+m_off_char+"]) = *(("+type+" *)&m_cla_buf[m_buf_pos]);\n\tm_buf_pos += "+type_len_str+";";
+
 }
 
 string CLBasicType::writeSerialier()

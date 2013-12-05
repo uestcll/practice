@@ -32,6 +32,7 @@ void CLSerializerProducer::buildSerializer()
 	initMemberFunction();
 	initMemberVar();
 
+
 	m_serialClass->setOffset();
 
 	completeConAndDecon();

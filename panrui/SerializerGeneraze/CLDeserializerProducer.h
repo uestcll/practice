@@ -17,7 +17,7 @@ class CLDeserializerProducer
 {
 public:
 	CLDeserializerProducer(CLMsgClassManager * classMng,string & serial);
-	void buildSerializer();
+	void buildDeserializer();
 private:
 	CLDeserializerProducer(const CLDeserializerProducer &);
 	const CLDeserializerProducer & operator = (const CLDeserializerProducer &);
@@ -26,9 +26,9 @@ private:
 	void initNamespace();
 	void initMemberFunction();
 	void initMemberVar();
-	void completeSerialInfo();
-	void completeGetBuffer();
-	void completeAllocateBuffer();
+	void completePaddingObj();
+	void completeGetNewObject();
+	void completeAllocateObj();
 	void completeConAndDecon();
 
 	CLMsgClassManager * m_classMng;
@@ -42,7 +42,6 @@ private:
 	static const string m_char_cla;
 	static const string m_cla_buf;
 	static const string m_buf_pos;
-	static const string m_buf_len;
 };
 
 #endif
