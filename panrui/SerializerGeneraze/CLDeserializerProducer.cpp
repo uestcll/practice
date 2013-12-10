@@ -109,7 +109,7 @@ void CLDeserializerProducer::completePaddingObj()
 	memberFunctionContent * fs = cla_content->addNewFunction("paddingObj");
 	while(it != m_serialClass->endVar())
 	{
-		fs->insertSentence((it->get())->writeDeserializer());
+		(it->get())->writeDeserializer(fs);
 		it++;
 	}
 }

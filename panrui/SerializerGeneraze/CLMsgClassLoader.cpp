@@ -5,7 +5,6 @@
 #include "CLgenerateSerializerTool.h"
 
 #include "CLBasicType.h"
-#include "CLPointerType.h"
 #include "CLStringType.h"
 #include "CLUserType.h"
 
@@ -93,7 +92,7 @@ namespace filedeal
 			return false;
 	}
 
-	void classContent(ifstream & istr,CLMsgClass * t_class)
+	void classContent(ifstream & istr,CLMsgClass * t_class,CLMsgClassManager * pmng)
 	{
 
 		string	tmp;
@@ -130,7 +129,7 @@ namespace filedeal
 			}
 			else
 			{
-				t_class->addMemberVar(CLMsgElementMap::getInstance()->initNewElement(tmp))->newVarDefinitionSentence(tmp);
+				t_class->addMemberVar(CLMsgElementMap::getInstance()->initNewElement(tmp,pmng))->newVarDefinitionSentence(tmp);
 			}
 //			istr.sync();
 //			getline(istr,tmp,'\n');
@@ -183,7 +182,7 @@ void CLMsgClassLoader::loadSingleFile(string & filename)
 		if(classJudge(istr,classname,is_needSerial,is_struct))
 		{
 			CLMsgClass * t_class = m_msgClassMng->classRegister(classname,is_needSerial,is_struct);
-			classContent(istr,t_class);
+			classContent(istr,t_class,this->m_msgClassMng);
 			is_needSerial = false;
 		}
 	}

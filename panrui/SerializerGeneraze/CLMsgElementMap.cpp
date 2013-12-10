@@ -2,9 +2,10 @@
 #include <string>
 
 #include "CLBasicType.h"
-#include "CLPointerType.h"
 #include "CLStringType.h"
 #include "CLUserType.h"
+
+#include "CLMsgClassManager.h"
 
 CLMsgElementMap::CLMsgElementMap()
 {
@@ -21,7 +22,7 @@ CLMsgElementMap * CLMsgElementMap::getInstance()
 }
 
 
-CLMsgElement * CLMsgElementMap::initNewElement(string &sentence)
+CLMsgElement * CLMsgElementMap::initNewElement(string &sentence,CLMsgClassManager * pmng)
 {
 	string type;
 	getNextItem(sentence,type,true);
@@ -29,13 +30,8 @@ CLMsgElement * CLMsgElementMap::initNewElement(string &sentence)
 	{
 		getNextItem(sentence,type,false);
 	}
-	
-	string check = "";
-	getNextItem(sentence,check,false);
-	if(check == "*")
-		type = check;
 
-	map<string ,CLMsgElement * (*)()>::iterator it = f_map.find(type);
+	map<string ,CLMsgElement * (*)(CLMsgClassManager *)>::iterator it = f_map.find(type);
 	if(it == f_map.end())
 	{
 		if(type == "")
@@ -46,7 +42,7 @@ CLMsgElement * CLMsgElementMap::initNewElement(string &sentence)
 		it = f_map.find(type);
 	}
 	
-	return it->second();
+	return it->second(pmng);
 }
 
 void CLMsgElementMap::getNextItem(string &tmp,string &out,bool if_reset)
@@ -99,26 +95,20 @@ void CLMsgElementMap::registMap()
 	f_map["uint16_t"] = initBasic;
 	f_map["uint8_t"] = initBasic;
 	f_map["string"] = initString;
-	f_map["*"] = initPointer;
 	f_map["userdef"] = initUser;
 }
 
-CLMsgElement * CLMsgElementMap::initBasic()
+CLMsgElement * CLMsgElementMap::initBasic(CLMsgClassManager *)
 {
 	return new CLBasicType;
 }
 
-CLMsgElement * CLMsgElementMap::initPointer()
-{
-	return new CLPointerType;
-}
-
-CLMsgElement * CLMsgElementMap::initString()
+CLMsgElement * CLMsgElementMap::initString(CLMsgClassManager *)
 {
 	return new CLStringType;
 }
 
-CLMsgElement * CLMsgElementMap::initUser()
+CLMsgElement * CLMsgElementMap::initUser(CLMsgClassManager * pmng)
 {
-	return new CLUserType;
+	return new CLUserType(pmng);
 }

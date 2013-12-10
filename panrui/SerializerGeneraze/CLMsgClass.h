@@ -15,9 +15,11 @@ struct offset
 	const offset & operator += (const offset & another);
 };
 class CLMsgClassManager;
+class CLOffsetSeter;
 class CLMsgClass
 {
 public:
+	friend CLOffsetSeter;
 	CLMsgClass(bool is_struct,CLMsgClassManager * p_mng);
 	~CLMsgClass();
 
@@ -31,7 +33,8 @@ public:
 	void setVirtualClass();
 
 	offset setOffset();
-
+	unsigned long getOffsetByName();
+	bool	getVirtualClassFlag(){	return m_isVirtualClass;}
 
 private:
 	const CLMsgClass & operator = (const CLMsgClass &);

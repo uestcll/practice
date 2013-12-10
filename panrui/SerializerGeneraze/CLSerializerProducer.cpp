@@ -145,8 +145,7 @@ void CLSerializerProducer::completeSerialInfo()
 	memberFunctionContent * fs = cla_content->addNewFunction("serialInfo");
 	while(it != m_serialClass->endVar())
 	{
-		fs->insertSentence((it->get())->writeSerialier());
-		fs->insertSentence("m_buf_pos += "+(it->get())->getValueLen()+";");
+		it->get()->writeSerialier(fs);
 		it++;
 
 	}

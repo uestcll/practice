@@ -111,8 +111,8 @@ ofstream & operator <<(ofstream &ostr,CLClassTemplate & cur_c)
 {
 	string def = cur_c.initDef(cur_c.className);
 	ostr<<"#ifndef "<<def<<endl<<"#define "<<def<<endl<<endl;
-	if(cur_c.beforeClass != "");
-		ostr<<cur_c.beforeClass<<endl;
+	if(cur_c.beforeClass != "")
+		ostr<<cur_c.beforeClass<<std::endl;
 
 	ostr<<endl<<endl<<cur_c.className;
 	if(cur_c.relations.size() != 0)
