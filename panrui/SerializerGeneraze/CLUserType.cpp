@@ -29,6 +29,7 @@ void CLUserType::newVarDefinitionSentence(string &sentence)
 	{
 		this->m_is_ptr = true;
 		getNextItem(sentence,type,false);
+		this->type_len =0x08;
 	}
 	this->m_value_name = type;
 
@@ -60,7 +61,7 @@ void CLUserType::writeDeserializer(memberFunctionContent * in,unsigned long  Bas
 		string m_off_str = m_off_char;
 		string new_base = getNewName();
 
-		in->insertSentence("("+this->type_name + " *)&"+base_ptr+"["+ m_off_str +"] = new "+this->type_name+";");
+		in->insertSentence("("+this->type_name + " *)&"+base_ptr+"["+ m_off_str +"] = new "+this->type_name+";\n\t");
 		in->insertSentence("char * "+new_base+" = &"+base_ptr+"["+ m_off_str +"];\n\t");
 
 
@@ -120,7 +121,7 @@ string CLUserType::getDeserializerSentence(unsigned long  Base,string base_ptr)
 	string m_off_str = m_off_char;		
 	string new_base = getNewName();
 
-	string phrase = "char *"+new_base+" = (char *)&"+base_ptr+"["+m_off_str+"]";
+	string phrase = "char *"+new_base+" = (char *)&"+base_ptr+"["+m_off_str+"];\n\t";
 
 	while(it != t_class->endVar())
 	{
@@ -137,7 +138,7 @@ string CLUserType::getSerializerSentence(unsigned long Base,string base_ptr)
 	string m_off_str = m_off_char;		
 	string new_base = getNewName();
 
-	string phrase = "char *"+new_base+" = (char *)&"+base_ptr+"["+m_off_str+"]";
+	string phrase = "char *"+new_base+" = (char *)&"+base_ptr+"["+m_off_str+"];\n\t";
 	CLMsgClass * t_class = m_pmng->findClass(this->type_name);
 	list<shared_ptr<CLMsgElement> >::iterator  it = t_class->beginVar();
 
@@ -159,10 +160,16 @@ string CLUserType::getValueLen(unsigned long Base,string base_ptr)
 	string phraseCounting = "";
 	string tmp;
 
+	char m_off_char[32] = {0};
+	sprintf(m_off_char,"%ld",this->m_off);
+	string m_off_str = m_off_char;		
+
+	string new_base = this->getNewName();
+	phraseCounting += "char *"+new_base+" = (char *)&"+base_ptr+"["+m_off_str+"];\n\t";
 
 	while(it != t_class->endVar())
 	{
-		tmp = it->get()->getValueLen();
+		tmp = it->get()->getValueLen(0,new_base);
 		if(tmp[0]<='9'&&tmp[0]>='0')
 			numCounting+= atoi(tmp.c_str());
 		else
@@ -175,7 +182,7 @@ string CLUserType::getValueLen(unsigned long Base,string base_ptr)
 		char num_char[32] = {0};
 		sprintf(num_char,"%d",numCounting);
 		string size_str = num_char;
-		phraseCounting += "m_buf_len += "+size_str+";\n\t";
+		phraseCounting += "m_buf_len += "+size_str;
 	}
 
 	return phraseCounting;

@@ -61,8 +61,12 @@ namespace filedeal
 		string tmp;
 		getNextObj(istr,tmp);
 		while((tmp!=STRUCT_FLAG&&tmp!=CLASS_FLAG)&&tmp!= CLMsgClassLoader::serialFlag&&istr.peek() != EOF)
-			getNextObj(istr,tmp);
+		{	
+			if(tmp == "define")
+				getNextObj(istr,tmp);
 
+			getNextObj(istr,tmp);
+		}
 		if(istr.peek() == EOF)
 			return false;
 

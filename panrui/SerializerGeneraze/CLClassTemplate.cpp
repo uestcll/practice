@@ -114,7 +114,7 @@ ofstream & operator <<(ofstream &ostr,CLClassTemplate & cur_c)
 	if(cur_c.beforeClass != "")
 		ostr<<cur_c.beforeClass<<std::endl;
 
-	ostr<<endl<<endl<<cur_c.className;
+	ostr<<endl<<endl<<"class "<<cur_c.className;
 	if(cur_c.relations.size() != 0)
 	{
 		vector<string>::iterator it = cur_c.relations.begin();

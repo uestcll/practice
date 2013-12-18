@@ -99,7 +99,7 @@ void CLDeserializerProducer::completeAllocateObj()
 {
 	memberFunctionContent * fa = cla_content->addNewFunction("allocateObj");
 	list<shared_ptr<CLMsgElement> >::iterator  it = m_serialClass->beginVar();
-	fa->insertSentence("m_cla = new" + className+";");
+	fa->insertSentence("m_cla = new " + className+";");
 	fa->insertSentence("m_char_cla = (char *)m_cla;");
 }
 

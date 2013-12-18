@@ -25,7 +25,7 @@ void CLStringType::newVarDefinitionSentence(string &sentence)
 	{
 		this->m_is_ptr = true;
 		getNextItem(sentence,type,false);
-		type_len =0x04;
+		type_len =0x08;
 	}
 	this->m_value_name = type;
 
@@ -176,7 +176,7 @@ string CLStringType::getSerializerSentence(unsigned long Base,string base_ptr)
 	sprintf(m_off_char,"%ld",this->m_off + Base);
 	string m_off_str = m_off_char;
 
-	return "memcpy(&m_cla_buf[m_buf_pos],((string *)&"+base_ptr+"["+m_off_str+"])->c_str(),((string *)&"+base_ptr+"["+m_off_str+"])->length());"+"\n\tm_buf_pos += " + getValueLen() +";\n\t";;
+	return "memcpy(&m_cla_buf[m_buf_pos],((string *)&"+base_ptr+"["+m_off_str+"])->c_str(),((string *)&"+base_ptr+"["+m_off_str+"])->length());"+"\n\tm_buf_pos += " + getValueLen(0,base_ptr) +";\n\t";;
 }
 string CLStringType::getValueLen(unsigned long Base,string base_ptr)
 {

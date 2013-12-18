@@ -31,8 +31,13 @@ offset CLOffsetSeter::setOffset(CLMsgClassManager * pmng)
 		{
 			offset latest = pmng->findClass(((CLUserType *)(it->get()))->getTypeName() )->setOffset();
 
+			if(cur_off.from_start % latest.max_unit)
+				cur_off.from_start = (cur_off.from_start/latest.max_unit + 1)*latest.max_unit;
+
+			it->get()->setOff(cur_off.from_start);
+
 			if(it->get()->getPtrFlag())
-				cur_off.from_start+=4;
+				cur_off.from_start+=8;
 			else if(it->get()->getArrFlag())
 			{
 				cur_off.max_unit = cur_off.max_unit>latest.max_unit?cur_off.max_unit:latest.max_unit;
