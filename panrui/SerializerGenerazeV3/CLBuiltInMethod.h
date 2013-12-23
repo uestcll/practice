@@ -10,9 +10,9 @@ public:
 	CLBuiltInMethod();
 	virtual ~CLBuiltInMethod();
 	
-	virtual string getSerialMethod(CLAbstractType * v_elementType );
-	virtual string getDeserialMethod(CLAbstractType * v_elementType );
-	virtual string getSize(CLAbstractType * v_elementType );
+	virtual string getSerialMethod(CLAbstractType * v_elementType ,string base_ptr = "out" );
+	virtual string getDeserialMethod(CLAbstractType * v_elementType ,string base_ptr = "in" );
+	virtual string getSize(CLAbstractType * v_elementType ,string base_ptr = "in" );
 
 private:
 	

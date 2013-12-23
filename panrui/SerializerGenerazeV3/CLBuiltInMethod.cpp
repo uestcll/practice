@@ -1,7 +1,7 @@
 #include "CLBuiltInMethod.h"
 #include "CLAbstractType.h"
 
-string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType)
+string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType ,string base_ptr )
 {
 	string t_type = identifyType(v_elementType);
 
@@ -12,8 +12,8 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType)
 		string t_strTypeLen = "8";	
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "("+t_type+" *)out["+t_strOff+"] = new "+t_type+";\n\t";
-		ret += "memcpy((char *)out["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "("+t_type+" *)"+base_ptr+"["+t_strOff+"] = new "+t_type+";\n\t";
+		ret += "memcpy((char *)"+base_ptr+"["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
@@ -21,7 +21,7 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType)
 	{
 		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&out["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "memcpy(&"+base_ptr+"["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
@@ -29,8 +29,8 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType)
 	{
 		string t_strTypeLen = "8";	
 
-		string ret = "("+t_type+" *)out["+t_strOff+"] = new "+t_type+";\n\t";
-		ret += "*(("+t_type+" *)out["+t_strOff+"]) = *(("+t_type+" *)&in[m_buf_pos]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "("+t_type+" *)"+base_ptr+"["+t_strOff+"] = new "+t_type+";\n\t";
+		ret += "*(("+t_type+" *)"+base_ptr+"["+t_strOff+"]) = *(("+t_type+" *)&in[m_buf_pos]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
@@ -38,13 +38,13 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType)
 	{
 		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen());
 
-		string ret = "*(("+t_type+" *)&out["+t_strOff+"]) = *(("+t_type+" *)&in[m_buf_pos]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "*(("+t_type+" *)&"+base_ptr+"["+t_strOff+"]) = *(("+t_type+" *)&in[m_buf_pos]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
 }
 
-string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType)
+string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType ,string base_ptr )
 {
 	string t_type = identifyType(v_elementType);
 
@@ -54,7 +54,7 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType)
 	{
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&out[m_buf_pos],(char *)in["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
+		string ret = "memcpy(&out[m_buf_pos],(char *)"+base_ptr+"["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
 
 		return ret;
 	}
@@ -62,7 +62,7 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType)
 	{
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&out[m_buf_pos],(char *)&in["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
+		string ret = "memcpy(&out[m_buf_pos],(char *)&"+base_ptr+"["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
 
 		return ret;
 	}
@@ -70,7 +70,7 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType)
 	{
 		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen());	
 
-		string ret = "*(("+t_type+" *)&out[m_buf_pos]) = *(("+t_type+" *)in["+t_strOff+"]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "*(("+t_type+" *)&out[m_buf_pos]) = *(("+t_type+" *)"+base_ptr+"["+t_strOff+"]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
@@ -78,13 +78,13 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType)
 	{
 		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen());
 
-		string ret = "*(("+t_type+" *)&out[m_buf_pos]) = *(("+t_type+" *)&in["+t_strOff+"]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "*(("+t_type+" *)&out[m_buf_pos]) = *(("+t_type+" *)&"+base_ptr+"["+t_strOff+"]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
 }
 
-string CLBuiltInMethod::getSize(CLAbstractType * v_elementType)
+string CLBuiltInMethod::getSize(CLAbstractType * v_elementType ,string base_ptr )
 {
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
 	{

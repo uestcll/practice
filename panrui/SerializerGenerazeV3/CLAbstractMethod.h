@@ -14,9 +14,9 @@ public:
 	CLAbstractMethod();
 	virtual ~CLAbstractMethod();
 
-	virtual string getSerialMethod(CLAbstractType * v_elementType) = 0;
-	virtual string getDeserialMethod(CLAbstractType * v_elementType) = 0;
-	virtual string getSize(CLAbstractType * v_elementType) = 0;
+	virtual string getSerialMethod(CLAbstractType * v_elementType,string base_ptr = "out" ) = 0;
+	virtual string getDeserialMethod(CLAbstractType * v_elementType,string base_ptr = "in" ) = 0;
+	virtual string getSize(CLAbstractType * v_elementType,string base_ptr = "in" ) = 0;
 
 private:
 
