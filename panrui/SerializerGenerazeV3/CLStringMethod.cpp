@@ -1,6 +1,16 @@
 #include "CLStringMethod.h"
 #include "CLAbstractType.h"
 
+CLStringMethod::CLStringMethod()
+{
+
+}
+
+CLStringMethod::~CLStringMethod()
+{
+
+}
+
 string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string base_ptr )
 {
 	string t_strOff = to_string((long long )v_elementType->getOff());

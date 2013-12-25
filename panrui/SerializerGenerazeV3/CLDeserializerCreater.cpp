@@ -77,11 +77,11 @@ void CLDeserializerCreater::initMemberVar()
 
 void CLDeserializerCreater::completeConAndDecon()
 {
-	memberFunctionContent * fc = cla_content->addNewFunction(m_claInfo->m_classname + "serializer");	
+	memberFunctionContent * fc = cla_content->addNewFunction(m_claInfo->m_classname + "deserializer");	
 	fc->insertSentence("\n");
 	fc->insertSentence("this->buf = buf;");
 
-	memberFunctionContent * fdc = cla_content->addNewFunction("virtual ~"+m_claInfo->m_classname + "serializer");
+	memberFunctionContent * fdc = cla_content->addNewFunction("virtual ~"+m_claInfo->m_classname + "deserializer");
 	fdc->insertSentence("\n");	
 }
 
@@ -111,11 +111,11 @@ void CLDeserializerCreater::completePaddingObj()
 	list<CLAbstractType *>::iterator ite = m_claInfo->m_elementList.begin();
 	while(ite != m_claInfo->m_elementList.end() )
 	{
-		fp->insertSentence(m_map->find(m_claInfo->m_classname)->second->getDeserialMethod((*ite)) + "\n");	
+		fp->insertSentence(m_map->find(typeid(**ite).name())->second->getDeserialMethod((*ite)) + "\n");	
 		
 		if(typeid(*ite) == typeid(CLUserDefType))
 		{
-			cla_content->addHeader("#include <" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h>\n");
+			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "deserializer.h\"\n");
 		}
 		
 		ite++;	

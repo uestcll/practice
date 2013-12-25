@@ -90,7 +90,7 @@ void CLSerializerCreater::completeCountBufSize()
 	memberFunctionContent * fg = cla_content->addNewFunction("countBufSize");	
 	list<CLAbstractType *>::iterator ite = m_claInfo->m_elementList.begin();
 
-	fg->insertSentence("\nint bufsize = 0;");
+	fg->insertSentence("\n\tint bufsize = 0;");
 
 
 	string str_size = "";
@@ -98,7 +98,7 @@ void CLSerializerCreater::completeCountBufSize()
 
 	while(ite != m_claInfo->m_elementList.end() )
 	{
-		str_size = m_map->find(m_claInfo->m_classname)->second->getSize((*ite));
+		str_size = m_map->find(typeid(**ite).name())->second->getSize((*ite));
 
 		if(str_size[0] <= '9'&&str_size[0] >= '9')
 		{
@@ -111,9 +111,16 @@ void CLSerializerCreater::completeCountBufSize()
 				string out = to_string(num_size);
 				fg->insertSentence("bufsize += "+out+";");
 			}
-			fg->insertSentence("bufsize += "+str_size+";");
-		}
 
+			if(typeid(**ite) == typeid(CLUserDefType))
+			{
+				fg->insertSentence(str_size);
+			}
+			else
+			{
+				fg->insertSentence("bufsize += "+str_size+";");
+			}
+		}
 		ite++;
 	}
 
@@ -145,11 +152,11 @@ void CLSerializerCreater::completeSerialInfo()
 
 	while(ite != m_claInfo->m_elementList.end() )
 	{
-		fs->insertSentence(m_map->find(m_claInfo->m_classname)->second->getSerialMethod((*ite)) + "\n");	
+		fs->insertSentence(m_map->find(typeid(**ite).name())->second->getSerialMethod((*ite)) + "\n");	
 		
-		if(typeid(*ite) == typeid(CLUserDefType))
+		if(typeid(**ite) == typeid(CLUserDefType))
 		{
-			cla_content->addHeader("#include <" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h>\n");
+			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "serializer.h\"\n");
 		}
 		
 		ite++;

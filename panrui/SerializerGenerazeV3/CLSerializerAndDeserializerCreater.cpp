@@ -18,6 +18,7 @@
 #include "CLDeserializerCreater.h"
 #include "CLSerializerCreater.h"
 
+
 #include <algorithm>
 
 CLSerializerAndDeserializerCreater::CLSerializerAndDeserializerCreater(const char * path):
@@ -37,7 +38,7 @@ CLSerializerAndDeserializerCreater::~CLSerializerAndDeserializerCreater()
 
 void CLSerializerAndDeserializerCreater::initEnvironment()
 {
-	m_classMethodMap[ typeid(CLStringType).name() ] = new CLBuiltInMethod();
+	m_classMethodMap[ typeid(CLBuiltInType).name() ] = new CLBuiltInMethod();
 	m_classMethodMap[ typeid(CLStringType).name() ] = new CLStringMethod();
 	m_classMethodMap[ typeid(CLUserDefType).name() ] = new CLUserDefMethod();
 
@@ -103,6 +104,7 @@ void CLSerializerAndDeserializerCreater::creatSerializerAndDeserializer()
 	while(serialIt != m_serializeList.end())
 	{
 		setOffset(m_classDescribeMap.find(*serialIt)->second);
+		serialIt++;
 	}
 
 	creatSerializer();
@@ -122,11 +124,12 @@ void CLSerializerAndDeserializerCreater::recheckSerialList()
 
 		while(t_typeIt != t_serialClass->m_elementList.end() )
 		{
-			if(typeid(*t_typeIt) == typeid(CLUserDefType))
+
+			if(typeid( **t_typeIt ) == typeid(CLUserDefType ))
 			{
-				if(find(m_serializeList.begin(),m_serializeList.end(),(*t_typeIt)->getVarName()) != m_serializeList.end())
+				if(find(m_serializeList.begin(),m_serializeList.end(),((CLUserDefType *)(*t_typeIt))->getUserDefName()) == m_serializeList.end())
 				{
-					m_serializeList.push_back((*t_typeIt)->getVarName() );
+					m_serializeList.push_back(((CLUserDefType *)(*t_typeIt))->getUserDefName() );
 
 				}
 

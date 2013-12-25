@@ -26,6 +26,11 @@ void CLStringType::analysisFromStatement(string & v_statement)
 		getNextItem(v_statement,type,false);
 		this->m_type_len =0x08;
 	}
+	else
+	{
+		this->m_type_len = 0x08;
+	}
+
 	this->m_var_name = type;
 
 	getNextItem(v_statement,type,false);

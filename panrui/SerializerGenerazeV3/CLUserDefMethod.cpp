@@ -2,6 +2,17 @@
 #include "CLAbstractType.h"
 #include "CLUserDefType.h"
 
+
+CLUserDefMethod::CLUserDefMethod()
+{
+
+}
+
+CLUserDefMethod::~CLUserDefMethod()
+{
+
+}
+
 string CLUserDefMethod::getDeserialMethod(CLAbstractType * v_elementType ,string base_ptr )
 {
 	string t_strOff = to_string((long long )v_elementType->getOff());
@@ -78,12 +89,18 @@ string CLUserDefMethod::getSize(CLAbstractType * v_elementType ,string base_ptr 
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		ret += uniqueName+".countBufSize((char *)"+base_ptr+"["+t_strOff+"]);\n\t";
+		ret += "bufsize +="+uniqueName+".countBufSize((char *)"+base_ptr+"["+t_strOff+"]);\n\t";
 	}
 	else
 	{
-		ret += uniqueName+".countBufSize((char *)&"+base_ptr+"["+t_strOff+"]);\n\t";
+		ret += "bufsize +="+uniqueName+".countBufSize((char *)&"+base_ptr+"["+t_strOff+"]);\n\t";
 	}
 
 	return ret;
+}
+
+string CLUserDefMethod::getUniqueName()
+{
+	static long long unique;
+	return "objNo"+to_string(unique++);
 }

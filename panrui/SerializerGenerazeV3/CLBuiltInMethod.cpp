@@ -1,6 +1,17 @@
 #include "CLBuiltInMethod.h"
 #include "CLAbstractType.h"
 
+
+CLBuiltInMethod::CLBuiltInMethod()
+{
+
+}
+
+CLBuiltInMethod::~CLBuiltInMethod()
+{
+
+}
+
 string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType ,string base_ptr )
 {
 	string t_type = identifyType(v_elementType);

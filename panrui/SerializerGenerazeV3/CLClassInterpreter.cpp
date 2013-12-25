@@ -10,6 +10,8 @@
 #include <string>
 using namespace std;
 
+map<string, CLAbstractType * (*)() > CLClassInterpreter::s_ElementGeterFunctionMap;
+
 CLClassInterpreter::CLClassInterpreter():m_classDescribe(NULL)
 {
 
@@ -24,12 +26,9 @@ CLClassDescribe * CLClassInterpreter::loadClassByFilename(string & v_filepath)
 {
 	m_istr.open(v_filepath.c_str(),ios::binary);
 
-	while(m_istr.peek() != EOF)
+	if(getClassEntryAndAllocateClassDescribe())
 	{
-		if(getClassEntryAndAllocateClassDescribe())
-		{
-			completeClassDescribeFromContent();
-		}
+		completeClassDescribeFromContent();
 	}
 
 	m_istr.close();
@@ -242,7 +241,8 @@ CLAbstractType * CLClassInterpreter::getNewElement(string & statement)
 		getNextObj(statement,type,false);
 	}
 	
-	static map<string, CLAbstractType * (*)() >::iterator it = s_ElementGeterFunctionMap.find(type);
+	map<string, CLAbstractType * (*)() >::iterator it = s_ElementGeterFunctionMap.find(type);
+	
 	if(it == s_ElementGeterFunctionMap.end())
 	{
 		if(type == "")
