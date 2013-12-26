@@ -8,7 +8,17 @@ ListType::ListType(ifstream & v_istr)
 
 void ListType::initFromFile(ifstream & v_istr)
 {
+	v_istr.get();
+	while(true)
+	{
+		this->m_list.push_back(Unit::build(v_istr));
 
+		char endflag = v_istr.get();
+		if(endflag = 'e')
+			break;
+		else
+			v_istr.seekg(-1,ios::cur);
+	}
 }
 
 ListType::~ListType()

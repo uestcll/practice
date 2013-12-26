@@ -15,7 +15,7 @@ public:
 	Unit(BaseType * );
 
 		
-	Unit * build(ifstream & );
+	static Unit * build(ifstream & );
 
 private:
 	Unit(Unit &);
@@ -23,10 +23,10 @@ private:
 
 	BaseType * m_data;
 
-	BaseType * retStringType(ifstream & );
-	BaseType * retIntegerType(ifstream & );
-	BaseType * retDictionaryType(ifstream & );
-	BaseType * retListType(ifstream & );
+	static BaseType * retStringType(ifstream & );
+	static BaseType * retIntegerType(ifstream & );
+	static BaseType * retDictionaryType(ifstream & );
+	static BaseType * retListType(ifstream & );
 };
 
 
