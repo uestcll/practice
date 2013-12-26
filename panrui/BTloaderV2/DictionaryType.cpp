@@ -32,5 +32,6 @@ DictionaryType::~DictionaryType()
 	{
 		delete it->first;
 		delete it->second;
+		it++;
 	}
 }

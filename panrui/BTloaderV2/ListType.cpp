@@ -28,5 +28,6 @@ ListType::~ListType()
 	while(it != m_list.end())
 	{
 		delete *it;
+		it++;
 	}
 }

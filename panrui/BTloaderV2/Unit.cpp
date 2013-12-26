@@ -14,7 +14,9 @@ Unit::Unit():m_data(NULL)
 Unit::~Unit()
 {
 	if(m_data)
+	{
 		delete m_data;
+	}
 }
 
 Unit::Unit(BaseType * v_data)
