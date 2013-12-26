@@ -17,7 +17,7 @@ void DictionaryType::initFromFile(ifstream & v_istr)
 		this->m_map.insert(pair<Unit *,Unit *>(fir,sec));
 
 		char endflag = v_istr.get();
-		if(endflag = 'e')
+		if(endflag == 'e')
 			break;
 		else
 			v_istr.seekg(-1,ios::cur);

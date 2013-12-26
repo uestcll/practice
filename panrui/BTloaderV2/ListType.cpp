@@ -14,7 +14,7 @@ void ListType::initFromFile(ifstream & v_istr)
 		this->m_list.push_back(Unit::build(v_istr));
 
 		char endflag = v_istr.get();
-		if(endflag = 'e')
+		if(endflag == 'e')
 			break;
 		else
 			v_istr.seekg(-1,ios::cur);

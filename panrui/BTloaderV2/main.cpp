@@ -7,8 +7,9 @@ int main()
 	ifstream ifstr("D:\\test.torrent",ios::binary);
 	Unit * pTest = Unit::build(ifstr);
 
-	int len = ifstr.tellg();
+	long long len = ifstr.tellg();
 
 	ifstr.close();
+	delete pTest;
 	return 0;
 }
