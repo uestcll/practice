@@ -23,10 +23,6 @@ private:
 
 	BaseType * m_data;
 
-	static BaseType * retStringType(ifstream & );
-	static BaseType * retIntegerType(ifstream & );
-	static BaseType * retDictionaryType(ifstream & );
-	static BaseType * retListType(ifstream & );
 };
 
 
