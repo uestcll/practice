@@ -32,11 +32,11 @@ string CLUserDefMethod::getDeserialMethod(CLAbstractType * v_elementType ,string
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		ret += "(char *)&"+base_ptr+"["+t_strOff+"] = (char *)"+uniqueName+".getNewObject(&in[m_buf_pos]);";
+		ret += "*((long *)(&"+base_ptr+"["+t_strOff+"])) = (long )"+uniqueName+".getNewObject((char *)&in[m_buf_pos]);";
 	}
 	else
 	{
-		ret += uniqueName+".paddingObj(&in[m_buf_pos],(char *)&"+base_ptr+"["+t_strOff+"]);\n\t";
+		ret += uniqueName+".paddingObj(&in[m_buf_pos],(char *)&("+base_ptr+"["+t_strOff+"]));\n\t";
 	}
 
 	return ret;
@@ -48,7 +48,7 @@ string CLUserDefMethod::getSerialMethod(CLAbstractType * v_elementType ,string b
 	CLUserDefType * t_ud = dynamic_cast<CLUserDefType *>(v_elementType);
 
 	string uniqueName = getUniqueName();
-	string ret = t_ud->getUserDefName()+"serializer "+uniqueName+";\n\t";
+	string ret = t_ud->getUserDefName()+"serializer "+uniqueName+"(NULL);\n\t";
 
 
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
@@ -61,11 +61,11 @@ string CLUserDefMethod::getSerialMethod(CLAbstractType * v_elementType ,string b
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		ret += uniqueName+".serialInfo((char *)"+base_ptr+"["+t_strOff+"],&out[m_buf_pos]);\n\t";
+		ret += uniqueName+".serialInfo((char *)*(long *)(&"+base_ptr+"["+t_strOff+"]),&out[m_buf_pos]);\n\t";
 	}
 	else
 	{
-		ret += uniqueName+".serialInfo((char *)&"+base_ptr+"["+t_strOff+"],&out[m_buf_pos]);\n\t";
+		ret += uniqueName+".serialInfo((char *)&("+base_ptr+"["+t_strOff+"]),&out[m_buf_pos]);\n\t";
 	}
 
 	return ret;
@@ -77,7 +77,7 @@ string CLUserDefMethod::getSize(CLAbstractType * v_elementType ,string base_ptr 
 	CLUserDefType * t_ud = dynamic_cast<CLUserDefType *>(v_elementType);
 
 	string uniqueName = getUniqueName();
-	string ret = t_ud->getUserDefName()+"serializer "+uniqueName+";\n\t";
+	string ret = t_ud->getUserDefName()+"serializer "+uniqueName+"(NULL);\n\t";
 
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
 	{
@@ -89,11 +89,11 @@ string CLUserDefMethod::getSize(CLAbstractType * v_elementType ,string base_ptr 
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		ret += "bufsize +="+uniqueName+".countBufSize((char *)"+base_ptr+"["+t_strOff+"]);\n\t";
+		ret += "bufsize +="+uniqueName+".countBufSize((char *)*((long *)(&"+base_ptr+"["+t_strOff+"])));\n\t";
 	}
 	else
 	{
-		ret += "bufsize +="+uniqueName+".countBufSize((char *)&"+base_ptr+"["+t_strOff+"]);\n\t";
+		ret += "bufsize +="+uniqueName+".countBufSize((char *)(&"+base_ptr+"["+t_strOff+"]));\n\t";
 	}
 
 	return ret;

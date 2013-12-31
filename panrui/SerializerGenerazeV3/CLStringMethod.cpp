@@ -1,6 +1,8 @@
 #include "CLStringMethod.h"
 #include "CLAbstractType.h"
 
+
+
 CLStringMethod::CLStringMethod()
 {
 
@@ -17,13 +19,13 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
 	{
-		string ret = "(string *)"+base_ptr+"["+t_strOff+"] = new string["+to_string((long long)v_elementType->getArrSize())+"]";
+		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string["+to_string((long long)v_elementType->getArrSize())+"]";
 		long long  count = 0;
 
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize-- )
 		{
-			ret += "(string *)"+base_ptr+"["+t_strOff+"]["+to_string(count)+"].append(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos]+4;\n\t";
+			ret += "(string *)(&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 		
 			count++;
 		}
@@ -38,7 +40,7 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize-- )
 		{
-			ret += "(string *)&"+base_ptr+"["+t_strOff+"]["+to_string(count)+"].append(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos]+4;\n\t";
+			ret += "(string *)&("+base_ptr+"["+t_strOff+"])["+to_string(count)+"].assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 		
 			count++;
 		}
@@ -47,14 +49,14 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		string ret = "(string *)"+base_ptr+"["+t_strOff+"] = new string";
-		ret += "(string *)"+base_ptr+"["+t_strOff+"]->append(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos]+4;\n\t";
+		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string";
+		ret += "((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 
 		return ret;
 	}
 	else
 	{
-		string ret = "(string *)&"+base_ptr+"["+t_strOff+"]->append(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos]+4;\n\t";
+		string ret = "((string *)&("+base_ptr+"["+t_strOff+"]))->assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 
 		return ret;
 	}
@@ -124,7 +126,7 @@ string CLStringMethod::getSize(CLAbstractType * v_elementType ,string base_ptr )
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			ret += "((string *)"+base_ptr+"["+t_strOff+"])["+to_string(count++)+"].length()+4*"+to_string(t_arrSize)+";";
+			ret += "((string *)(*((long *)&"+base_ptr+"["+t_strOff+"])))["+to_string(count++)+"].length()+4*"+to_string(t_arrSize)+";";
 		}
 		
 		return ret;
@@ -144,7 +146,7 @@ string CLStringMethod::getSize(CLAbstractType * v_elementType ,string base_ptr )
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		return "((string *)"+base_ptr+"["+t_strOff+"])->length()+4;";
+		return "((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->length()+4;";
 	}
 	else
 	{

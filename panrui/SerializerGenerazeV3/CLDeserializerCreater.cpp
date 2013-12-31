@@ -46,10 +46,10 @@ void CLDeserializerCreater::run(CLClassDescribe * v_claInfo,map< string , CLAbst
 
 void CLDeserializerCreater::initIncludingFile()
 {
-	string includingFileInHeader = "#include <iostream>\n#include <string>\n#include <vector>\n#include <map>\n#include <list>\n";
+	string includingFileInHeader = "#include <iostream>\n#include <string.h>\n#include <string>\n#include <vector>\n#include <map>\n#include <list>\n";
 	cla->addIncludingFile(includingFileInHeader);
 
-	string includingFileInCPP = "#include \""+m_claInfo->m_classname+".h\"\n" + "#include \""+m_claInfo->m_classname + "serializer"+".h\"\n";
+	string includingFileInCPP = "#include \""+m_claInfo->m_classname+".h\"\n" + "#include \""+m_claInfo->m_classname + "deserializer"+".h\"\n";
 	cla_content->addHeader(includingFileInCPP);
 }
 
@@ -63,25 +63,24 @@ void CLDeserializerCreater::initNamespace()
 
 void CLDeserializerCreater::initMemberFunction()
 {
-	cla->addItem("public","",m_claInfo->m_classname + "deserializer","char * buf");
-	cla->addItem("public","","virtual ~" + m_claInfo->m_classname + "deserializer","");
+	cla->addItem("public","",m_claInfo->m_classname + "deserializer","");
+	cla->addItem("public","virtual ","~" + m_claInfo->m_classname + "deserializer","");
 	cla->addItem("public",m_claInfo->m_classname+" * ","getNewObject","char * buf");
-	cla->addItem("private","char *","paddingObj","char * in,char * out");
+	cla->addItem("public","char *","paddingObj","char * in,char * out");
 	cla->addItem("private",m_claInfo->m_classname +" * ","allocateObj","");	
 }
 
 void CLDeserializerCreater::initMemberVar()
 {
-	cla->addItem("private","const char * ","buf");
+
 }
 
 void CLDeserializerCreater::completeConAndDecon()
 {
 	memberFunctionContent * fc = cla_content->addNewFunction(m_claInfo->m_classname + "deserializer");	
 	fc->insertSentence("\n");
-	fc->insertSentence("this->buf = buf;");
 
-	memberFunctionContent * fdc = cla_content->addNewFunction("virtual ~"+m_claInfo->m_classname + "deserializer");
+	memberFunctionContent * fdc = cla_content->addNewFunction("~"+m_claInfo->m_classname + "deserializer");
 	fdc->insertSentence("\n");	
 }
 
@@ -89,9 +88,9 @@ void CLDeserializerCreater::completeGetNewObject()
 {
 	memberFunctionContent * fg = cla_content->addNewFunction("getNewObject");
 	fg->insertSentence("\n");
-	fg->insertSentence(m_claInfo->m_classname +" * pObj = allocateObj()");
-	fg->insertSentence("char * pstrObj = pObj");
-	fg->insertSentence("return ("+m_claInfo->m_classname+" * )paddingObj(buf,pstrObj)");
+	fg->insertSentence(m_claInfo->m_classname +" * pObj = allocateObj();");
+	fg->insertSentence("char * pstrObj = (char *)pObj;");
+	fg->insertSentence("return ("+m_claInfo->m_classname+" * )paddingObj(buf,pstrObj);");
 }
 
 void CLDeserializerCreater::completeAllocateObj()
@@ -99,7 +98,7 @@ void CLDeserializerCreater::completeAllocateObj()
 	memberFunctionContent * fa = cla_content->addNewFunction("allocateObj");
 	fa->insertSentence("\n");
 
-	fa->insertSentence("return (char *)new "+m_claInfo->m_classname+";");
+	fa->insertSentence("return new "+m_claInfo->m_classname+";");
 }
 
 void CLDeserializerCreater::completePaddingObj()
@@ -113,8 +112,9 @@ void CLDeserializerCreater::completePaddingObj()
 	{
 		fp->insertSentence(m_map->find(typeid(**ite).name())->second->getDeserialMethod((*ite)) + "\n");	
 		
-		if(typeid(*ite) == typeid(CLUserDefType))
+		if(typeid(**ite) == typeid(CLUserDefType))
 		{
+			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h\"\n");
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "deserializer.h\"\n");
 		}
 		

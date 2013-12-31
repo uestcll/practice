@@ -16,7 +16,14 @@ void memberFunctionContent::insertSentence(string sentence)
 
 ofstream& operator <<(ofstream & ostr,memberFunctionContent & cur_fc)
 {
-	ostr<<cur_fc.typeName<<" "<<cur_fc.className<<"::"<<cur_fc.functionName<<"("<<cur_fc.paraName<<")"<<endl;
+	if(cur_fc.typeName.find("virtual") != string::npos)
+	{
+		ostr<< cur_fc.typeName.substr(7);
+	}
+	else
+		ostr<<cur_fc.typeName;
+	
+	ostr<<" "<<cur_fc.className<<"::"<<cur_fc.functionName<<"("<<cur_fc.paraName<<")"<<endl;
 	ostr<<"{"<<cur_fc.content<<"}"<<endl;
 	return ostr;
 }
@@ -46,7 +53,7 @@ CLClassContentTemplate::~CLClassContentTemplate()
 
 void CLClassContentTemplate::writeCPPtoDisk()
 {
-	string add = "./";
+	string add = "D:/serial/";
 	add += m_classHeader->className;
 	add += ".cpp";
 	ofstream fd(add.c_str(),ios::trunc);

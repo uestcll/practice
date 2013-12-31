@@ -46,7 +46,7 @@ void CLSerializerCreater::run(CLClassDescribe * v_claInfo,map< string , CLAbstra
 
 void CLSerializerCreater::initIncludingFile()
 {
-	string includingFileInHeader = "#include <iostream>\n#include <string>\n#include <vector>\n#include <map>\n#include <list>\n";
+	string includingFileInHeader = "#include <iostream>\n#include <string.h>\n#include <string>\n#include <vector>\n#include <map>\n#include <list>\n";
 	cla->addIncludingFile(includingFileInHeader);
 
 	string includingFileInCPP = "#include \""+m_claInfo->m_classname+".h\"\n" + "#include \""+m_claInfo->m_classname + "serializer"+".h\"\n";
@@ -64,7 +64,7 @@ void CLSerializerCreater::initNamespace()
 void CLSerializerCreater::initMemberFunction()
 {
 	cla->addItem("public","",m_claInfo->m_classname + "serializer","const "+m_claInfo->m_classname+ " * in");
-	cla->addItem("public","","virtual ~"+m_claInfo->m_classname + "serializer","");
+	cla->addItem("public","virtual ","~"+m_claInfo->m_classname + "serializer","");
 	cla->addItem("public","char *","getBuffer","int * buf_size");
 	cla->addItem("public","char *","serialInfo","char * in,char * out");
 	cla->addItem("public","int","countBufSize","char * in");
@@ -79,9 +79,9 @@ void CLSerializerCreater::completeConAndDecon()
 {
 	memberFunctionContent * fc = cla_content->addNewFunction(m_claInfo->m_classname + "serializer");	
 	fc->insertSentence("\n");
-	fc->insertSentence("m_cla = in");
+	fc->insertSentence("m_cla = in;");
 
-	memberFunctionContent * fdc = cla_content->addNewFunction("virtual ~"+m_claInfo->m_classname + "serializer");
+	memberFunctionContent * fdc = cla_content->addNewFunction("~"+m_claInfo->m_classname + "serializer");
 	fdc->insertSentence("\n");
 }
 
@@ -129,6 +129,7 @@ void CLSerializerCreater::completeCountBufSize()
 		string out = to_string(num_size);
 		fg->insertSentence("bufsize += "+out+";");		
 	}
+	fg->insertSentence("return bufsize;");
 }
 
 void CLSerializerCreater::completeGetBuffer()
@@ -136,10 +137,10 @@ void CLSerializerCreater::completeGetBuffer()
 	memberFunctionContent * fb = cla_content->addNewFunction("getBuffer");	
 	fb->insertSentence("\n");
 
-	fb->insertSentence("*buf_size = countBufSize((char *)m_cla)");
-	fb->insertSentence("char * buf = new char[*buf_size];\n");
+	fb->insertSentence("*buf_size = countBufSize((char *)m_cla);");
+	fb->insertSentence("char * buf = new char[*buf_size];\n;");
 
-	fb->insertSentence("return serialInfo((char *)m_cla,buf)");
+	fb->insertSentence("return serialInfo((char *)m_cla,buf);");
 }
 
 void CLSerializerCreater::completeSerialInfo()
@@ -156,6 +157,7 @@ void CLSerializerCreater::completeSerialInfo()
 		
 		if(typeid(**ite) == typeid(CLUserDefType))
 		{
+			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h\"\n");
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "serializer.h\"\n");
 		}
 		
