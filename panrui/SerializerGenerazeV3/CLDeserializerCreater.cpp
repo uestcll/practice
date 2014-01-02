@@ -66,7 +66,7 @@ void CLDeserializerCreater::initMemberFunction()
 	cla->addItem("public","",m_claInfo->m_classname + "deserializer","");
 	cla->addItem("public","virtual ","~" + m_claInfo->m_classname + "deserializer","");
 	cla->addItem("public",m_claInfo->m_classname+" * ","getNewObject","char * buf");
-	cla->addItem("public","char *","paddingObj","char * in,char * out");
+	cla->addItem("public","char *","paddingObj","char * in,char * out,int * out_off = NULL");
 	cla->addItem("private",m_claInfo->m_classname +" * ","allocateObj","");	
 }
 
@@ -120,6 +120,6 @@ void CLDeserializerCreater::completePaddingObj()
 		
 		ite++;	
 	}
-
+	fp->insertSentence("if(out_off != NULL)\n\t\t*out_off += m_buf_pos;");
 	fp->insertSentence("return out;\n");
 }

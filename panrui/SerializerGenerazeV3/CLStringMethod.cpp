@@ -19,7 +19,7 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
 	{
-		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string["+to_string((long long)v_elementType->getArrSize())+"]";
+		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string["+to_string((long long)v_elementType->getArrSize())+"];\n\t";
 		long long  count = 0;
 
 		long long t_arrSize = v_elementType->getArrSize();
@@ -49,7 +49,7 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string";
+		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string;\n\t";
 		ret += "((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 
 		return ret;
@@ -74,8 +74,8 @@ string CLStringMethod::getSerialMethod(CLAbstractType * v_elementType ,string ba
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			string ret = "*((int *)&out[m_buf_pos]) = ((string *)"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length();\n\tm_buf_pos+=4;\n\t";
-			ret += "memcpy(&out[m_buf_pos],((string *)"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].c_str(),((string *)"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length());\n\tm_buf_pos+=((string *&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length();\n\t";
+			string ret = "*((int *)&out[m_buf_pos]) = ((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length();\n\tm_buf_pos+=4;\n\t";
+			ret += "memcpy(&out[m_buf_pos],((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].c_str(),((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length());\n\tm_buf_pos+=((string *)**((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length();\n\t";
 
 			count++;
 		}
@@ -100,8 +100,8 @@ string CLStringMethod::getSerialMethod(CLAbstractType * v_elementType ,string ba
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		string ret = "*((int *)&out[m_buf_pos]) = ((string *)"+base_ptr+"["+t_strOff+"])->length();\n\tm_buf_pos+=4;\n\t";
-		ret += "memcpy(&out[m_buf_pos],((string *)"+base_ptr+"["+t_strOff+"])->c_str(),((string *)"+base_ptr+"["+t_strOff+"])->length());\n\tm_buf_pos+=((string *)"+base_ptr+"["+t_strOff+"])->length();\n\t";
+		string ret = "*((int *)&out[m_buf_pos]) = ((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->length();\n\tm_buf_pos+=4;\n\t";
+		ret += "memcpy(&out[m_buf_pos],((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->c_str(),((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->length());\n\tm_buf_pos+=((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))->length();\n\t";
 		
 		return ret;
 	}

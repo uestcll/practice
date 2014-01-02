@@ -23,7 +23,22 @@ ofstream& operator <<(ofstream & ostr,memberFunctionContent & cur_fc)
 	else
 		ostr<<cur_fc.typeName;
 	
-	ostr<<" "<<cur_fc.className<<"::"<<cur_fc.functionName<<"("<<cur_fc.paraName<<")"<<endl;
+	ostr<<" "<<cur_fc.className<<"::"<<cur_fc.functionName<<"(";
+	
+	if(cur_fc.paraName.find("=") != string::npos)
+	{
+		string::size_type equalpos;
+		string::size_type compos;
+		while((equalpos= cur_fc.paraName.find("=")) != string::npos)
+		{
+			compos = cur_fc.paraName.find_first_of(",",equalpos);
+			cur_fc.paraName.erase(equalpos,compos);
+		}
+		ostr<<cur_fc.paraName<<")"<<endl;
+	}
+	else
+		ostr<<cur_fc.paraName<<")"<<endl;
+	
 	ostr<<"{"<<cur_fc.content<<"}"<<endl;
 	return ostr;
 }
