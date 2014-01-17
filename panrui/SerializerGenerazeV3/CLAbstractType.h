@@ -20,15 +20,16 @@ public:
 	bool getPtrFlag(){	return m_isPtr;}
 	bool getArrFlag(){	return m_isArray;}
 	
-	int  getTypeLen(){	return m_type_len;}
+	int  getTypeLen(){	return m_isPtr?8:m_type_len;}
 
-	int  getArrSize(){	return m_isArray;}
+	int  getArrSize(){	return m_arraySize;}
 
 	const string & getVarName(){	return m_var_name;}
 
+	int m_type_len;
+
 protected:
 
-	int m_type_len;
 	string m_var_name;
 
 	bool m_isPtr;

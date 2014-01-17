@@ -2,7 +2,7 @@
 
 int main()
 {
-	CLSerializerAndDeserializerCreater tmp("D:\\test");
+	CLSerializerAndDeserializerCreater tmp(".");
 
 	tmp.initEnvironment();
 	tmp.creatSerializerAndDeserializer();

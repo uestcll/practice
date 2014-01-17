@@ -46,7 +46,6 @@ void CLBuiltInType::analysisFromStatement(string  & v_statement)
 	{
 		this->m_isPtr = true;
 		getNextItem(v_statement,type,false);
-		m_type_len = 0x08;
 	}
 	
 	this->m_var_name = type;
@@ -59,4 +58,9 @@ void CLBuiltInType::analysisFromStatement(string  & v_statement)
 		this->m_arraySize = atoi(type.c_str());
 	}
 
+}
+
+void CLBuiltInType::setSizeOff(int isizeOff)
+{
+	this->m_sizeOff = to_string((long long )isizeOff);
 }

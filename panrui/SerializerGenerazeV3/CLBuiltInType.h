@@ -11,6 +11,8 @@ public:
 	virtual ~CLBuiltInType();
 	virtual void analysisFromStatement(string  & );
 
+	void   setSizeOff(int );
+	string m_sizeOff;
 private:
 
 	CLBuiltInType(const CLBuiltInType &);

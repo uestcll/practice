@@ -1,6 +1,7 @@
 #include "CLBuiltInMethod.h"
 #include "CLAbstractType.h"
 
+#include "CLBuiltInType.h"
 
 CLBuiltInMethod::CLBuiltInMethod()
 {
@@ -24,7 +25,7 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType ,string
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
 		string ret = "("+t_type+" *)("+base_ptr+"["+t_strOff+"]) = new "+t_type+";\n\t";
-		ret += "memcpy((char *)("+base_ptr+"["+t_strOff+"]),&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		ret += "memcpy((char *)("+base_ptr+"["+t_strOff+"]),&in[m_buf_pos],"+t_strTypeLen+");\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
@@ -32,16 +33,16 @@ string CLBuiltInMethod::getDeserialMethod(CLAbstractType * v_elementType ,string
 	{
 		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&"+base_ptr+"["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+")\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "memcpy(&"+base_ptr+"["+t_strOff+"],&in[m_buf_pos],"+t_strTypeLen+");\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
 
 		return ret;
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		string t_strTypeLen = "8";	
+		string t_strTypeLen = to_string((long long )v_elementType->m_type_len);	
 
-		string ret = "("+t_type+" *)("+base_ptr+"["+t_strOff+"]) = new "+t_type+";\n\t";
-		ret += "*(("+t_type+" *)("+base_ptr+"["+t_strOff+"])) = *(("+t_type+" *)&in[m_buf_pos]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "*((long *)(&"+base_ptr+"["+t_strOff+"])) = (long )new "+t_type+"[ (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"]))];\n\t";
+		ret += "memcpy((char *)*((long *)&("+base_ptr+"["+t_strOff+"])) ,&in[m_buf_pos],"+t_strTypeLen+"* (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"])));\n\tm_buf_pos += "+t_strTypeLen+"* (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"]));\n\t";
 
 		return ret;
 	}
@@ -65,7 +66,7 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType ,string b
 	{
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&out[m_buf_pos],(char *)"+base_ptr+"["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
+		string ret = "memcpy(&out[m_buf_pos],(char *)"+base_ptr+"["+t_strOff+"],"+t_arrSize+");\n\tm_buf_pos += "+t_arrSize+";\n\t";
 
 		return ret;
 	}
@@ -73,15 +74,15 @@ string CLBuiltInMethod::getSerialMethod(CLAbstractType * v_elementType ,string b
 	{
 		string t_arrSize = to_string((long long )v_elementType->getTypeLen() * (long long)v_elementType->getArrSize());	
 
-		string ret = "memcpy(&out[m_buf_pos],(char *)&"+base_ptr+"["+t_strOff+"],"+t_arrSize+")\n\tm_buf_pos += "+t_arrSize+";\n\t";
+		string ret = "memcpy(&out[m_buf_pos],(char *)&"+base_ptr+"["+t_strOff+"],"+t_arrSize+");\n\tm_buf_pos += "+t_arrSize+";\n\t";
 
 		return ret;
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		string t_strTypeLen = to_string((long long )v_elementType->getTypeLen());	
+		string t_strTypeLen = to_string((long long )v_elementType->m_type_len);	
 
-		string ret = "*(("+t_type+" *)&out[m_buf_pos]) = *(("+t_type+" *)"+base_ptr+"["+t_strOff+"]);\n\tm_buf_pos += "+t_strTypeLen+";\n\t";
+		string ret = "memcpy(&out[m_buf_pos],(char *)*((long *)&"+base_ptr+"["+t_strOff+"]),"+t_strTypeLen+"* (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"])));\n\tm_buf_pos += "+t_strTypeLen+"* (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"]));\n\t";
 
 		return ret;
 	}
@@ -107,7 +108,7 @@ string CLBuiltInMethod::getSize(CLAbstractType * v_elementType ,string base_ptr 
 	}
 	else if(v_elementType->getPtrFlag())
 	{
-		return to_string((long long )v_elementType->getTypeLen());
+		return to_string((long long )v_elementType->m_type_len)+"* (*(unsigned int *)(&"+base_ptr+"["+((CLBuiltInType *)v_elementType)->m_sizeOff+"]))";
 	}
 	else
 	{
@@ -119,15 +120,15 @@ string CLBuiltInMethod::identifyType(CLAbstractType * v_elementType )
 {
 	string t_type;
 
-	if(v_elementType->getTypeLen() == 8)
+	if(v_elementType->m_type_len == 8)
 	{
 		t_type = "long";
 	}
-	else if(v_elementType->getTypeLen() == 4)
+	else if(v_elementType->m_type_len == 4)
 	{
 		t_type = "int";
 	}
-	else if(v_elementType->getTypeLen() == 2)
+	else if(v_elementType->m_type_len == 2)
 	{
 		t_type = "short";
 	}

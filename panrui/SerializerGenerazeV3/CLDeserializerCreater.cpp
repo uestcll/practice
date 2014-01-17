@@ -8,6 +8,7 @@
 #include "CLSerializerAndDeserializerCreater.h"
 
 #include "CLUserDefType.h"
+#include "CLBuiltInType.h"
 
 CLDeserializerCreater::CLDeserializerCreater():cla(NULL),cla_content(NULL),m_claInfo(NULL),m_map(NULL)
 {
@@ -108,15 +109,26 @@ void CLDeserializerCreater::completePaddingObj()
 
 	fp->insertSentence("int m_buf_pos = 0;");
 	list<CLAbstractType *>::iterator ite = m_claInfo->m_elementList.begin();
+
 	while(ite != m_claInfo->m_elementList.end() )
 	{
-		fp->insertSentence(m_map->find(typeid(**ite).name())->second->getDeserialMethod((*ite)) + "\n");	
-		
 		if(typeid(**ite) == typeid(CLUserDefType))
 		{
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h\"\n");
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "deserializer.h\"\n");
 		}
+		else if(typeid(**ite) == typeid(CLBuiltInType) )
+		{
+			if(((CLBuiltInType *)(*ite))->getPtrFlag() == true)
+			{
+				list<CLAbstractType *>::iterator t_it = ite;
+				t_it--;
+
+				((CLBuiltInType *)(*ite))->setSizeOff((*t_it)->getOff());
+			}
+		}
+
+		fp->insertSentence(m_map->find(typeid(**ite).name())->second->getDeserialMethod((*ite)) + "\n");	
 		
 		ite++;	
 	}

@@ -68,7 +68,7 @@ CLClassContentTemplate::~CLClassContentTemplate()
 
 void CLClassContentTemplate::writeCPPtoDisk()
 {
-	string add = "D:/serial/";
+	string add = ".\\";
 	add += m_classHeader->className;
 	add += ".cpp";
 	ofstream fd(add.c_str(),ios::trunc);

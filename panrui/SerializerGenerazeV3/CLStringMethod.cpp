@@ -19,13 +19,14 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 
 	if(v_elementType->getPtrFlag()&&v_elementType->getArrFlag())
 	{
-		string ret = "*((long *)&"+base_ptr+"["+t_strOff+"]) = (long )new string["+to_string((long long)v_elementType->getArrSize())+"];\n\t";
+		string ret;
 		long long  count = 0;
 
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize-- )
 		{
-			ret += "(string *)(&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
+			ret += "*((long *)&"+base_ptr+"["+t_strOff+"+"+to_string(count)+"*8]) = (long )new string;\n\t";
+			ret += "((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"]))->assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 		
 			count++;
 		}
@@ -40,7 +41,7 @@ string CLStringMethod::getDeserialMethod(CLAbstractType * v_elementType ,string 
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize-- )
 		{
-			ret += "(string *)&("+base_ptr+"["+t_strOff+"])["+to_string(count)+"].assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
+			ret += "((string *)&("+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].assign(&in[m_buf_pos+4],*((int *)&in[m_buf_pos]));\n\tm_buf_pos += *((int *)&in[m_buf_pos])+4;\n\t";
 		
 			count++;
 		}
@@ -74,8 +75,8 @@ string CLStringMethod::getSerialMethod(CLAbstractType * v_elementType ,string ba
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			string ret = "*((int *)&out[m_buf_pos]) = ((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length();\n\tm_buf_pos+=4;\n\t";
-			ret += "memcpy(&out[m_buf_pos],((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].c_str(),((string *)*((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length());\n\tm_buf_pos+=((string *)**((long *)&"+base_ptr+"["+t_strOff+"]))["+to_string(count)+"].length();\n\t";
+			ret += "*((int *)&out[m_buf_pos]) = ((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"]))->length();\n\tm_buf_pos+=4;\n\t";
+			ret += "memcpy(&out[m_buf_pos],((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"]))->c_str(),((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"]))->length());\n\tm_buf_pos+=((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"]))->length();\n\t";
 
 			count++;
 		}
@@ -90,7 +91,7 @@ string CLStringMethod::getSerialMethod(CLAbstractType * v_elementType ,string ba
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			string ret = "*((int *)&out[m_buf_pos]) = ((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length();\n\tm_buf_pos+=4;\n\t";
+			ret += "*((int *)&out[m_buf_pos]) = ((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length();\n\tm_buf_pos+=4;\n\t";
 			ret += "memcpy(&out[m_buf_pos],((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].c_str(),((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length());\n\tm_buf_pos+=((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count)+"].length();\n\t";
 
 			count++;
@@ -126,7 +127,10 @@ string CLStringMethod::getSize(CLAbstractType * v_elementType ,string base_ptr )
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			ret += "((string *)(*((long *)&"+base_ptr+"["+t_strOff+"])))["+to_string(count++)+"].length()+4*"+to_string(t_arrSize)+";";
+			ret += "((string *)(((long *)&"+base_ptr+"["+t_strOff+"])["+to_string(count++)+"]))->length()+4";
+
+			if(t_arrSize != 0)
+				ret += "+";
 		}
 		
 		return ret;
@@ -139,7 +143,10 @@ string CLStringMethod::getSize(CLAbstractType * v_elementType ,string base_ptr )
 		long long t_arrSize = v_elementType->getArrSize();
 		while(t_arrSize--)
 		{
-			ret += "((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count++)+"].length()+4*"+to_string(t_arrSize)+";";
+			ret += "((string *)&"+base_ptr+"["+t_strOff+"])["+to_string(count++)+"].length()+4";
+
+			if(t_arrSize != 0)
+				ret += "+";
 		}
 		
 		return ret;

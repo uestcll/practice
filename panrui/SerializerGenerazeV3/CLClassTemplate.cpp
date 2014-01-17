@@ -187,7 +187,7 @@ ostream & operator <<(ostream &ostr,CLClassTemplate & cur_c)
 
 void CLClassTemplate::writeToFile()
 {
-	string add = "D:/serial/";
+	string add = ".\\";
 	add+= className;
 	add+= ".h";
 	ofstream fd(add.c_str(),ios::trunc);

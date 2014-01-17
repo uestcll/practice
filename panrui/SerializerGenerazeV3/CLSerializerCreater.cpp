@@ -8,6 +8,7 @@
 #include "CLSerializerAndDeserializerCreater.h"
 
 #include "CLUserDefType.h"
+#include "CLBuiltInType.h"
 
 CLSerializerCreater::CLSerializerCreater():cla(NULL),cla_content(NULL)
 {
@@ -87,17 +88,30 @@ void CLSerializerCreater::completeConAndDecon()
 
 void CLSerializerCreater::completeCountBufSize()
 {
+
+
 	memberFunctionContent * fg = cla_content->addNewFunction("countBufSize");	
 	list<CLAbstractType *>::iterator ite = m_claInfo->m_elementList.begin();
 
 	fg->insertSentence("\n\tint bufsize = 0;");
-
 
 	string str_size = "";
 	_Longlong num_size = 0;
 
 	while(ite != m_claInfo->m_elementList.end() )
 	{
+
+		if(typeid(**ite) == typeid(CLBuiltInType) )
+		{
+			if(((CLBuiltInType *)(*ite))->getPtrFlag() == true)
+			{
+				list<CLAbstractType *>::iterator t_it = ite;
+				t_it--;
+				
+				((CLBuiltInType *)(*ite))->setSizeOff((*t_it)->getOff());
+			}
+		}
+
 		str_size = m_map->find(typeid(**ite).name())->second->getSize((*ite));
 
 		if(str_size[0] <= '9'&&str_size[0] >= '9')
@@ -153,14 +167,14 @@ void CLSerializerCreater::completeSerialInfo()
 
 	while(ite != m_claInfo->m_elementList.end() )
 	{
-		fs->insertSentence(m_map->find(typeid(**ite).name())->second->getSerialMethod((*ite)) + "\n");	
-		
 		if(typeid(**ite) == typeid(CLUserDefType))
 		{
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + ".h\"\n");
 			cla_content->addHeader("#include \"" + ((CLUserDefType *)(*ite))->getUserDefName() + "serializer.h\"\n");
 		}
 		
+		
+		fs->insertSentence(m_map->find(typeid(**ite).name())->second->getSerialMethod((*ite)) + "\n");	
 		ite++;
 	}
 

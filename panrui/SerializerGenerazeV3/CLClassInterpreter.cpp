@@ -116,7 +116,7 @@ bool CLClassInterpreter::getClassEntryAndAllocateClassDescribe()
 		if(tmp == ";")
 		{
 			delete m_classDescribe;
-			return false;
+			return getClassEntryAndAllocateClassDescribe();
 		}
 		m_istr.seekg(-1,ios::cur);
 		return true;
@@ -130,6 +130,7 @@ void CLClassInterpreter::completeClassDescribeFromContent()
 	getNextObj(tmp);
 	if(tmp == ":")
 	{
+		getNextObj(tmp);
 		getNextObj(tmp);
 		this->m_classDescribe->m_superClassname = tmp;
 
