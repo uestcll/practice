@@ -1,3 +1,0 @@
-echoServer : echoServerBySelect.cpp CLSocketPack.cpp CLEventManager.cpp CLEventManagerBySelect.cpp
-	g++ echoServerBySelect.cpp CLSocketPack.cpp CLEventManager.cpp CLEventManagerBySelect.cpp -o \
-		echoServer -g
